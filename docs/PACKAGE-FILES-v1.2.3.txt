@@ -1,0 +1,22 @@
+v1.2.3 after v1.2.2. Root-relative changed/new files; no migration or dependency changes.
+
+README.md
+UPDATE-v1.2.3-SCHEDULE-FORM-07-10-2026.md
+app/Http/Requests/ScheduleRequest.php
+app/Models/ExamSchedule.php
+config/scheduler.php
+docs/API.md
+docs/PROJECT-DECISIONS.md
+lang/bn.json
+public/build/assets/app-BpU745RF.js
+public/build/manifest.json
+resources/js/app.js
+resources/views/schedules/form.blade.php
+tests/Feature/SchedulerApiTest.php
+tests/Feature/SchedulerAuditIdentityTest.php
+tests/Feature/SchedulerFormWorkflowTest.php
+tests/Feature/SchedulerLocalizationTest.php
+tests/Feature/SchedulerOptionalFieldsTest.php
+tests/Feature/SchedulerTest.php
+tests/Feature/SchedulerUiSettingsTest.php
+docs/PACKAGE-FILES-v1.2.3.txt

@@ -1,0 +1,374 @@
+[
+  {
+    "path": "rollback-choice-ui.php",
+    "sha256": "9d81e435bf24541b2b5b2b9dc88440a65763499a6c061a3068fdfb8725223051"
+  },
+  {
+    "path": "config/choice.php",
+    "sha256": "5967a75265d5297e6d394d6d83bc5a62c7b7fd65b7acb47688aa5e63e7b9d617"
+  },
+  {
+    "path": "app/Models/ChoiceEvent.php",
+    "sha256": "3b2930fe6e37ed2faed45ccb71d7b2b191b8dd988d4e8218f6a12b5eefd53b54"
+  },
+  {
+    "path": "app/Models/EventCandidate.php",
+    "sha256": "87e247a08ffed08490f2cee35d00dd09501aca0892f408d87dc664af5805b6f5"
+  },
+  {
+    "path": "app/Models/EventPost.php",
+    "sha256": "7d835cb56c3047f14e22d835bb1136c0509c460778fa91e359f6e7281d941dd4"
+  },
+  {
+    "path": "app/Models/CandidateApplication.php",
+    "sha256": "3eff3b1976877b73fc4a3113e8017985862a9acc155d26ad1fb03136822f3076"
+  },
+  {
+    "path": "app/Models/ChoiceOption.php",
+    "sha256": "78b5a405413675445885931d3b957502ae961d3896829b9ec490e1dbaf45e37b"
+  },
+  {
+    "path": "app/Services/Choice/BirthDateNormalizer.php",
+    "sha256": "1960f5add5a113405434952768caeff580d7126785f7c75fb123b56949a51bc6"
+  },
+  {
+    "path": "app/Services/Choice/CandidateCsvReader.php",
+    "sha256": "c582358dcc7f60c807b435bb7082919eefdd2a13d755a44fb26d3a18aee504ff"
+  },
+  {
+    "path": "app/Services/Choice/ChoiceWorkbook.php",
+    "sha256": "0ac5136e5166843cdc4be8c2f84e9e0d6351029d214e372205d7f691cccf9280"
+  },
+  {
+    "path": "app/Services/Choice/SubmissionDbf.php",
+    "sha256": "41d4a4a93843f3b27ee80d6c5ed7f973d1ba500946eb8b94a7b550bcd4c9721a"
+  },
+  {
+    "path": "app/Services/Choice/LegacyDbfWriter.php",
+    "sha256": "ede1dfcfc522b87bd2be087ae76bd8d563528fc5a87f69986228dddaa144a97c"
+  },
+  {
+    "path": "app/Services/Choice/ReceiptQrCode.php",
+    "sha256": "cecba25eb8ee2ceb33437813880f1c6ca384f7bfc9bb2047a4f460b9fbbf08a4"
+  },
+  {
+    "path": "app/Services/Choice/ChoiceExportData.php",
+    "sha256": "290bcd8aed2dd7e7ccd5c63de5255056294456c5d1debd26daa937916d34d375"
+  },
+  {
+    "path": "app/Services/Choice/SubmissionReceiptPdf.php",
+    "sha256": "79f987ff1d616d82c2433dd53b0311e8a7090c1ffc8b88d7e6a00714f865452d"
+  },
+  {
+    "path": "app/Services/Choice/BanglaReceiptPdf.php",
+    "sha256": "1784383a73284ba8461a8e76a41106b9afdce0d06a792f9009db4808aa956fb7"
+  },
+  {
+    "path": "app/Services/Choice/ExportFilename.php",
+    "sha256": "4c9e536c8440694b00f1ea051e85e0aee1250b9bb11de0b42ebc4d9babc4b143"
+  },
+  {
+    "path": "app/Services/Choice/ChoiceEditor.php",
+    "sha256": "b419d97514f55a46725be089490a13679d88d5d9fb71b070b92d520ffdfb7bb9"
+  },
+  {
+    "path": "app/Services/Choice/SubmissionReceiptData.php",
+    "sha256": "4c20316f2b60063963a615e1b653fc9e0aa2e3a5dc90ee6babdbd93d501a8d5b"
+  },
+  {
+    "path": "app/Services/Choice/CandidateExcelReader.php",
+    "sha256": "012c3ce30be0f01978451eda7cc0fc272bda41b25f445e787231f68c61bc76aa"
+  },
+  {
+    "path": "app/Http/Middleware/ChoiceStaff.php",
+    "sha256": "2a1fb9ab6974df4dfb590d6ad3a9915a78b8471f328c25589d55d5305d75e5ae"
+  },
+  {
+    "path": "app/Http/Controllers/CandidateImportController.php",
+    "sha256": "33ccc6b94fa574919aa1c575a8e9b80ad6db9fb69b4654d6e0b67ec3ba12365f"
+  },
+  {
+    "path": "app/Http/Controllers/ChoiceEditorController.php",
+    "sha256": "64978227cc5f227e3d31647de825b08cda8ac19678df1139849c5b3a7b273dde"
+  },
+  {
+    "path": "app/Http/Controllers/ChoiceDataResetController.php",
+    "sha256": "be85c530caae71d9202411dceaae3c04a177f87b9911b4e6172b61e90caf25f5"
+  },
+  {
+    "path": "app/Http/Controllers/ChoiceSubmissionAdminController.php",
+    "sha256": "9104f62a283d562ac0ee0e8f59a7e9c9cc7d829ea8516655f882616ad4120371"
+  },
+  {
+    "path": "app/Http/Controllers/ChoiceExportController.php",
+    "sha256": "529507e2ebcc770eed1042af01e69fb1efbb46f42ddee146b9e71af0e79e6e68"
+  },
+  {
+    "path": "app/Http/Controllers/SubmissionStatusController.php",
+    "sha256": "29023e6297fd7def11905af787af5cf05267c427230f670c610a670073bc80de"
+  },
+  {
+    "path": "app/Http/Controllers/CandidateSubmissionController.php",
+    "sha256": "e30be87f7b09a8a2380ca80bde1c59099960ec4e80420330cde92a08c41ec879"
+  },
+  {
+    "path": "app/Http/Controllers/ChoiceEventController.php",
+    "sha256": "e9ca830f5717f19bae6e9880515778489796fd96e03b7f64512ffd9b68e4d801"
+  },
+  {
+    "path": "database/migrations/2026_10_02_000005_add_submission_candidate_snapshot.php",
+    "sha256": "2be63f04fd00acff4a188dc4a07978c1e8db3b2db724105be1581705adbd9a6f"
+  },
+  {
+    "path": "database/migrations/2026_10_02_000006_add_demo_submission_flags.php",
+    "sha256": "ba54bc6e05452e7e3cdc4e07731702f38646f2eb1d935764098ae7aa5c121cab"
+  },
+  {
+    "path": "database/migrations/2026_09_30_000001_create_choice_foundation.php",
+    "sha256": "dd83f67f64a2ac5ceb27147f64514dd6efdd43a1353d0f3113a27dcbf679b73c"
+  },
+  {
+    "path": "database/migrations/2026_10_01_000003_make_candidate_parent_names_optional.php",
+    "sha256": "8c875474e7e1875f4c76f6c25a1b113d0121b6239c2f3ce8e9583ec92aa87e7a"
+  },
+  {
+    "path": "database/migrations/2026_10_01_000004_guard_active_choice_submissions.php",
+    "sha256": "bb6a4afdb4d07f6912c91100417499553f041d0700a5f0891b152985512e102b"
+  },
+  {
+    "path": "database/migrations/2026_09_30_000002_add_choice_event_metadata.php",
+    "sha256": "af3bb09be3f741de720abf1e10039e516baf095f8c517de1e28f0e3aa8a52c59"
+  },
+  {
+    "path": "tests/Unit/SubmissionDbfTest.php",
+    "sha256": "8c60f8ee3ce7dbbe73dadefee10eeef571b38e16134e5d90f601bede47118a91"
+  },
+  {
+    "path": "tests/Unit/ReceiptQrCodeTest.php",
+    "sha256": "c04679503fd5ff08f9d118e6c66815e37a69891c7ad10fd27cbb1e9497c4b01a"
+  },
+  {
+    "path": "tests/Unit/BanglaReceiptPdfTest.php",
+    "sha256": "73207d1783b7a15eaeac77ade5eab9273806d6992a5346dd52d6339e2e718892"
+  },
+  {
+    "path": "tests/Unit/ExampleTest.php",
+    "sha256": "ffacae5c1a2a44c809420af5b3b404910da1b12167d58764dac6d10b8ba8cfaf"
+  },
+  {
+    "path": "tests/Feature/ChoiceEventMetadataTest.php",
+    "sha256": "ba69f09d9978b498a56d610d8d5492157b063ea8a65de7cce9f567b57536d3cb"
+  },
+  {
+    "path": "tests/Feature/CandidateExcelImportTest.php",
+    "sha256": "612a2048a242284043df3680621ef244807a5b93284e4a641184d4107d5e37a3"
+  },
+  {
+    "path": "tests/Feature/ChoiceAdministrationTest.php",
+    "sha256": "559a87318f1ed6cc30f997f1d75bbf3d7aa1c444d8f7298c52fac6811e60100e"
+  },
+  {
+    "path": "tests/Feature/CandidateManagementTest.php",
+    "sha256": "a5649590273a2d09ec1cac82e0edf38021ad2343dd9f154d98b9f1fe6648b711"
+  },
+  {
+    "path": "tests/Feature/ChoiceFoundationTest.php",
+    "sha256": "f0f598be7f4afd90984fc6233dd39ae532e5732f420d709ec0670365d70e7ff2"
+  },
+  {
+    "path": "tests/Feature/ChoiceDeletionTest.php",
+    "sha256": "b8ed8f95edcb5813a2dcb819df17359c8bb44fede0e3aa1fe44b1866a85152c7"
+  },
+  {
+    "path": "tests/Feature/StaffUserManagementTest.php",
+    "sha256": "b5993d611f69d8a870ba4ab3ea3b635b21eac2cb6e03461ac02b9f7bd32e519f"
+  },
+  {
+    "path": "tests/Feature/CandidateSubmissionTest.php",
+    "sha256": "f7e299b7dc6c1a2260d18a285d243efeb89448e087e49b8407ea705b03c779c6"
+  },
+  {
+    "path": "tests/Feature/ChoiceEditorTest.php",
+    "sha256": "29506bf862ffcffbf8b0bd08d3982d477a9c6ee10143bd133b0bed24b405f79e"
+  },
+  {
+    "path": "tests/Feature/ExampleTest.php",
+    "sha256": "9c40360d15da039bc7c5980110e4377f54ac2f935afa6ee0231df72e62abaa19"
+  },
+  {
+    "path": "tests/Feature/CandidateOptionalParentNamesTest.php",
+    "sha256": "a86d5b85d09cb1f13ed6b0675261d39f62fa271228b70116e6361ce4bcad8544"
+  },
+  {
+    "path": "tests/ui/choice-selection-state.test.mjs",
+    "sha256": "e19da1eac744f9b16ede0a22412efa513ee97ef1b44ae26ad08612f7bf365c3d"
+  },
+  {
+    "path": "resources/css/candidate-choices.css",
+    "sha256": "0d2b55a267a2633f56b4efa271e0dd76fc1aa705ba9d767ebd9d758eb24e6a2d"
+  },
+  {
+    "path": "resources/views/welcome.blade.php",
+    "sha256": "bdb9bb7d2eecceb3581e429545b6ec96014ccab6d0ae83d4c52930e9a15f7d65"
+  },
+  {
+    "path": "resources/js/choice-editor.js",
+    "sha256": "5a2a71b64639c69c89107946b8df6b30f647872502641915b7b497a7900d60cd"
+  },
+  {
+    "path": "resources/js/choice-selection-state.js",
+    "sha256": "936754784f436631d261701ab22fd52f077dce5d1bddf7f951c999a1841f68c6"
+  },
+  {
+    "path": "resources/js/candidate-choices.js",
+    "sha256": "4692d1c0bf251c7b458902b64f3bcb07bb18052a1fc41090e06d487d20fbd02c"
+  },
+  {
+    "path": "resources/views/users/submission-status.blade.php",
+    "sha256": "332f2fe7c43820e41b0d28d3bb354f90cc420f7282953f926b3f9e54a41f8404"
+  },
+  {
+    "path": "resources/views/choice/options/preview.blade.php",
+    "sha256": "e977b433806475c573d89d3a7d7e9299befbdf00ec8eba7699a20f7a5dcce3dd"
+  },
+  {
+    "path": "resources/views/choice/options/editor.blade.php",
+    "sha256": "408e06497e49f1a51ab7abeafe9be9aeb4860a30cfe521012bcda9c4dddc04ea"
+  },
+  {
+    "path": "resources/views/choice/candidate/review.blade.php",
+    "sha256": "91cade0146db76ca2906d136fb4f223c7513777683d5be67e429bdcf2f2519fa"
+  },
+  {
+    "path": "resources/views/choice/candidate/receipt-pdf.blade.php",
+    "sha256": "3a6397502d0addc25ddfcfb6a7ae43c1e3007429e4dd109dbffaad5ca02afc31"
+  },
+  {
+    "path": "resources/views/choice/candidate/choices.blade.php",
+    "sha256": "fd44ac5acd591576c2c50a2f99d342dde40932de55c447231c98f798a52eb07e"
+  },
+  {
+    "path": "resources/views/choice/candidate/receipt.blade.php",
+    "sha256": "a7ddad448ad4c9d82b826aaf695cafcedf353670d8aef096f22fbb594eeebab2"
+  },
+  {
+    "path": "resources/views/choice/candidate/receipt-body.blade.php",
+    "sha256": "e3d6bcf4f3f71b649b47bc73133b208bb2b865b051dcc867c22d3b5d6b143b91"
+  },
+  {
+    "path": "resources/views/choice/candidate/layout.blade.php",
+    "sha256": "fdc59c5467461b89906fd48bd6e389e5a6b68975b3bb6fbea6294f0ea252a83c"
+  },
+  {
+    "path": "resources/views/choice/candidate/login.blade.php",
+    "sha256": "b23d0e3076ef629e4e7ff2ba3d763a511728c74bc922baa0a4add268c038699b"
+  },
+  {
+    "path": "resources/views/choice/submissions/index.blade.php",
+    "sha256": "fbd11a54557b463d9fcf8c368a86c255c54e7ee7a7ee3a882f64784680896cb7"
+  },
+  {
+    "path": "resources/views/choice/submissions/confirm.blade.php",
+    "sha256": "e18153b414e0ab45947cb190214c8ec3e62b4996b9cc36adfe4c1297ac2bb253"
+  },
+  {
+    "path": "resources/views/choice/public/home.blade.php",
+    "sha256": "5afba2e9acfe3297576b0d3a44266636f624bbcfb0539ee2b9015286b92d927a"
+  },
+  {
+    "path": "resources/views/choice/public/shell-styles.blade.php",
+    "sha256": "4af08f0fa26174bc29c5b22e668fa135525fc7f50895e95adb5917263250888f"
+  },
+  {
+    "path": "resources/views/choice/import/pagination.blade.php",
+    "sha256": "5194e5acd58436385bb873fd72c16acf357ab9da5957567e4c83ac7b4a6b7d92"
+  },
+  {
+    "path": "resources/views/choice/import/preview.blade.php",
+    "sha256": "d50eec86405c72c82baa964c3af2643208dc70224c73c55d35501f91086aef16"
+  },
+  {
+    "path": "resources/views/choice/import/index.blade.php",
+    "sha256": "6e6313bf39b3c51db306ee58733325dc3698e0326c4e48e7e2b44d97e7772c02"
+  },
+  {
+    "path": "resources/views/choice/events/show.blade.php",
+    "sha256": "bf944a9e320edeb581444f3b58cafb1f0d471f80f9126f4e90968020f678811c"
+  },
+  {
+    "path": "resources/views/choice/events/record-pdf.blade.php",
+    "sha256": "28e2b25416de1ca4e0a5a96ac1b6a1c201fafb8310f211cf30d01bedd1b6f2c9"
+  },
+  {
+    "path": "resources/views/choice/events/form.blade.php",
+    "sha256": "38a308bb0d1b75adf7c55649a72835df5f3c5754f30d6900ff35ca8f4ef7b0e8"
+  },
+  {
+    "path": "resources/views/choice/events/reset.blade.php",
+    "sha256": "308cf5e1aca1894b68eed849332574f947adf0f822041296b34743c2721847df"
+  },
+  {
+    "path": "resources/views/choice/events/close.blade.php",
+    "sha256": "48a99ef658077fad7fa9d6065f70f34add713e014f97916dca1ee96ce07daa17"
+  },
+  {
+    "path": "resources/views/choice/events/index.blade.php",
+    "sha256": "5836e8f5355f181f9afb1ff4aa221547c3d546773c5e38dc4d442435ceeacd05"
+  },
+  {
+    "path": "resources/views/choice/shared/fonts.blade.php",
+    "sha256": "4ff85fb264e69fa241552a026400091482e798c8deca4fe141d6143faab399f2"
+  },
+  {
+    "path": "public/build/fonts-manifest.json",
+    "sha256": "650911d7bfd02b3443b55702c8cf4c65604d2f3f27d4fb56880a8117a03652a5"
+  },
+  {
+    "path": "public/build/assets/candidate-choices-D684LNf8.js",
+    "sha256": "8aeb197308624a23d1fe536d6e57d3ffaa965403523689b1f1e9856bdf938995"
+  },
+  {
+    "path": "public/build/assets/instrument-sans-600-normal-B7fBEWYG.woff2",
+    "sha256": "efb770916eda95a0e31d80cccde9651d4e8617010b21220e9f227c4820d675da"
+  },
+  {
+    "path": "public/build/assets/instrument-sans-400-normal-D1W7dsQl.woff",
+    "sha256": "797bd3eaa70edbd4757650ab44dad75fbfbfdf18bacedb4b71022c04621d30ad"
+  },
+  {
+    "path": "public/build/assets/instrument-sans-500-normal-Z6ESRlEs.woff",
+    "sha256": "bd6a8dc8b0dc0cced0c32d3eda93f0e0e82c58ddefea8b53b3307b0c48da3089"
+  },
+  {
+    "path": "public/build/assets/app-gQy9FIVu.css",
+    "sha256": "07ad1c08d52cc8f049d8f4e973d1f8a93412a3d17c8ba5bd615edb56190b7b37"
+  },
+  {
+    "path": "public/build/assets/choice-editor-DZ1PVNF0.js",
+    "sha256": "9d775db974740ad6a2b89bc1951b8cebbf17377003befd29f0819576f6b6964f"
+  },
+  {
+    "path": "public/build/assets/instrument-sans-500-normal-Dk9ku72i.woff2",
+    "sha256": "9d3547da16d950d12a677c772a3ff9b69846e60e7dcd1b5efd540993f7286532"
+  },
+  {
+    "path": "public/build/assets/candidate-choices-Db8PNVnX.css",
+    "sha256": "93b54955d4146440ca5d5a24a38c868964c7e9a82fad916f27062505a0fe6839"
+  },
+  {
+    "path": "public/build/assets/instrument-sans-600-normal-B9e8oLYv.woff",
+    "sha256": "9b4ce1f2b26be7cb087fd87d6f99a202136292ec820af75bd38ab9e53895cf28"
+  },
+  {
+    "path": "public/build/assets/fonts-DqppEDJS.css",
+    "sha256": "44d52dbfb3c59f3aafd13440ff05d3abc5fe18151065af5a346e758820f3a7ff"
+  },
+  {
+    "path": "public/build/assets/app-DdR9lK49.js",
+    "sha256": "9fe0c49273c594e334d5821ef533a791d9fe640cedd73b4fd010b771165d9021"
+  },
+  {
+    "path": "public/build/assets/instrument-sans-400-normal-DRC__1Mx.woff2",
+    "sha256": "9a91efaa3599a6ef01b2f49e9ec670e3a2f39baeef09c73198f1052cf3bb0850"
+  }
+]
