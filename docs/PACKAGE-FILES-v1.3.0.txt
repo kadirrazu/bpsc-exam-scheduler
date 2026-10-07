@@ -1,0 +1,24 @@
+v1.3.0 overlay for project-reference-07-10-2026-1-22-AM.zip. Root-relative files; migration required.
+
+README.md
+UPDATE-v1.3.0-POST-GRADE-README-07-10-2026.md
+app/Http/Controllers/AuditLogController.php
+app/Http/Requests/ScheduleRequest.php
+app/Models/ExamSchedule.php
+app/Observers/SchedulerObserver.php
+app/Services/Scheduler/Audit.php
+app/Services/Scheduler/ScheduleExport.php
+config/app.php
+config/scheduler.php
+database/migrations/2026_10_07_000006_add_schedule_post_grade.php
+docs/API.md
+docs/PROJECT-DECISIONS.md
+lang/bn.json
+resources/views/audits/index.blade.php
+resources/views/schedules/form.blade.php
+resources/views/schedules/index.blade.php
+resources/views/schedules/report.blade.php
+resources/views/schedules/show.blade.php
+tests/Feature/SchedulerFormWorkflowTest.php
+tests/Feature/SchedulerPostGradeTest.php
+docs/PACKAGE-FILES-v1.3.0.txt

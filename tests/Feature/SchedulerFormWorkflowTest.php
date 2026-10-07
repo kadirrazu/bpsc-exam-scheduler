@@ -41,7 +41,7 @@ class SchedulerFormWorkflowTest extends TestCase
             $response = $this->get($url)->assertOk()->assertSee('Number of Exam Centers (Non-Viva) (Optional)')->assertSee('Ministry/Organization')->assertDontSee('Ministry/Organization (Optional)')->assertDontSee('name="title"', false);
             preg_match_all('/<(?:input|select|textarea)\b[^>]*\bid="([^"]+)"[^>]*>/s', $response->getContent(), $matches);
             $ids = array_values(array_filter($matches[1], fn ($id) => $id !== 'board_count'));
-            $this->assertSame(['unit', 'exam_type', 'reference', 'post_name', 'ministry', 'advertisement_number', 'advertisement_year', 'exam_date', 'start_time', 'end_time', 'candidate_count', 'center_count', 'status', 'notes'], $ids);
+            $this->assertSame(['unit', 'exam_type', 'reference', 'post_name', 'post_grade', 'ministry', 'advertisement_number', 'advertisement_year', 'exam_date', 'start_time', 'end_time', 'candidate_count', 'center_count', 'status', 'notes'], $ids);
         }
     }
 

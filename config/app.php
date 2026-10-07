@@ -78,7 +78,7 @@ return [
     |
     */
 
-    'locale' => 'bn',
+    'locale' => PHP_SAPI === 'cli' ? 'en' : 'bn',
 
     'fallback_locale' => env('APP_FALLBACK_LOCALE', 'en'),
 

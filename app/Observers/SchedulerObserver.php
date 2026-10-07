@@ -12,7 +12,7 @@ class SchedulerObserver
     private function fields(Model $m): array
     {
         return $m instanceof User ? ['name', 'email', 'designation_id', 'unit', 'role', 'is_active', 'preferred_locale', 'deleted_at'] :
-            ($m instanceof Designation ? ['name', 'slug', 'sort_order', 'is_active'] : ['title', 'post_name', 'ministry', 'reference', 'advertisement_number', 'advertisement_year', 'exam_type', 'unit', 'exam_date', 'start_time', 'end_time', 'candidate_count', 'center_count', 'board_count', 'status', 'notes', 'version', 'deleted_at']);
+            ($m instanceof Designation ? ['name', 'slug', 'sort_order', 'is_active'] : ['title', 'post_name', 'post_grade', 'ministry', 'reference', 'advertisement_number', 'advertisement_year', 'exam_type', 'unit', 'exam_date', 'start_time', 'end_time', 'candidate_count', 'center_count', 'board_count', 'status', 'notes', 'version', 'deleted_at']);
     }
 
     private function snapshot(Model $m, bool $old = false): array

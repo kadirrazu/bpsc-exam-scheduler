@@ -13,11 +13,12 @@ class Audit
     {
         $request = app()->bound('request') ? request() : null;
         $actor ??= $request?->user();
+        $console = app()->runningInConsole() && ! $request?->route();
         AuditLog::create([
             'actor_id' => $actor?->id, 'actor_name' => $actor?->name, 'action' => $action,
             'subject_type' => $subject ? class_basename($subject) : null, 'subject_id' => $subject?->getKey(),
-            'channel' => app()->runningInConsole() && ! $request?->route() ? 'console' : ($request?->is('api/*') ? 'api' : 'web'),
-            'ip_address' => $request?->ip(), 'user_agent' => mb_substr((string) $request?->userAgent(), 0, 500),
+            'channel' => $console ? 'console' : ($request?->is('api/*') ? 'api' : 'web'),
+            'ip_address' => $console ? null : $request?->ip(), 'user_agent' => mb_substr((string) $request?->userAgent(), 0, 500),
             'details' => $details, 'created_at' => now(),
         ]);
     }

@@ -60,3 +60,8 @@ Latest field order: Unit, Exam Type, Post Code, Post Name, Ministry/Organization
 ## v1.2.4 footer and personal menu (7 October 2026)
 
 Footer commission name is English in every locale: Bangladesh Public Service Commission (BPSC). Software Version uses v + config('scheduler.version'), superseding the formerly preserved literal 1.0. Subsequent release version bumps automatically update the footer. The personal account dropdown shows name/designation/unit only; own Role appears on My Profile, while administrator role management and authorization remain intact. See UPDATE-v1.2.4-FOOTER-USER-MENU-07-10-2026.md.
+
+
+## v1.3.0 grade and terminal language (7 October 2026)
+
+Authoritative source is project-reference-07-10-2026-1-22-AM.zip. Optional positive-integer Post Grade follows Post Name, with nullable historical values. The API/model store numeric grade, Bengali digits accepted. README.md provides concise English installation/update instructions. CLI app locale is English; HTTP locale middleware preserves Bengali-default web and saved language selection. Source audit regressions were corrected to match existing exact-IP/console-IP tests. See UPDATE-v1.3.0-POST-GRADE-README-07-10-2026.md.

@@ -326,5 +326,7 @@
     "Channel": "Channel",
     "Audit records identify who acted, what they did, when they did it and their source IP address.": "প্রতিটি অডিট রেকর্ডে ব্যবহারকারী, অ্যাকশন, সময় এবং যে IP থেকে অনুরোধ এসেছে তা থাকে।",
     "Number of Exam Centers (Non-Viva) (Optional)": "পরীক্ষাকেন্দ্রের সংখ্যা (ঐচ্ছিক)",
-    "Number of Boards": "বোর্ডের সংখ্যা"
+    "Number of Boards": "বোর্ডের সংখ্যা",
+    "Post Grade": "পদের গ্রেড",
+    "Post Grade (Optional)": "পদের গ্রেড (ঐচ্ছিক)"
 }

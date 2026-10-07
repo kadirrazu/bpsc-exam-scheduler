@@ -103,3 +103,8 @@ Role/unit/status display labels stay English under any Accept-Language; designat
 ## v1.2.3 conditional count / organization requirements
 
 ministry (Ministry/Organization) is required on schedule create/update, Unicode string max 200. For all non-viva types, center_count is optional nullable integer (0..100000); board_count must be absent/null. For nc_viva and bcs_viva, board_count is required integer (0..100000); center_count must be absent/null. Existing nullable historical organization values remain readable; editing requires filling ministry. Other required fields: unit, exam_type, post_name, exam_date, status. Web and API share the same rules; no API role or audit contract changed.
+
+
+## v1.3.0 post grade
+
+Schedule create/update accepts optional post_grade: integer/null, 1..65535; Bengali numeric digits are normalized. Responses expose an integer/null. Blank edit clears the value. Existing records retain null until assigned. The grade is included in audit change snapshots, print/PDF and XLSX column Q; earlier A..P columns remain unchanged. CLI locale is English independently of the HTTP/API language preference.

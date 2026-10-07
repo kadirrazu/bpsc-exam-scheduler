@@ -11,13 +11,13 @@ class ExamSchedule extends Model
 {
     use SoftDeletes;
 
-    protected $attributes = ['center_count' => null, 'board_count' => null, 'candidate_count' => null, 'ministry' => null, 'reference' => null, 'notes' => null];
+    protected $attributes = ['post_grade' => null, 'center_count' => null, 'board_count' => null, 'candidate_count' => null, 'ministry' => null, 'reference' => null, 'notes' => null];
 
-    protected $fillable = ['title', 'post_name', 'ministry', 'reference', 'advertisement_number', 'advertisement_year', 'exam_type', 'unit', 'exam_date', 'start_time', 'end_time', 'candidate_count', 'center_count', 'board_count', 'status', 'notes'];
+    protected $fillable = ['title', 'post_name', 'post_grade', 'ministry', 'reference', 'advertisement_number', 'advertisement_year', 'exam_type', 'unit', 'exam_date', 'start_time', 'end_time', 'candidate_count', 'center_count', 'board_count', 'status', 'notes'];
 
     protected function casts(): array
     {
-        return ['exam_date' => 'date:Y-m-d', 'candidate_count' => 'integer', 'center_count' => 'integer', 'board_count' => 'integer', 'version' => 'integer', 'advertisement_year' => 'integer'];
+        return ['post_grade' => 'integer', 'exam_date' => 'date:Y-m-d', 'candidate_count' => 'integer', 'center_count' => 'integer', 'board_count' => 'integer', 'version' => 'integer', 'advertisement_year' => 'integer'];
     }
 
     protected function examDate(): Attribute

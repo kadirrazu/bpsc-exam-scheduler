@@ -11,7 +11,7 @@ class ScheduleRequest extends FormRequest
     protected function prepareForValidation(): void
     {
         $data = [];
-        foreach (['advertisement_year', 'candidate_count', 'center_count', 'board_count', 'version'] as $field) {
+        foreach (['post_grade', 'advertisement_year', 'candidate_count', 'center_count', 'board_count', 'version'] as $field) {
             if ($this->exists($field)) {
                 $data[$field] = Ui::ascii($this->input($field));
             }
@@ -26,7 +26,7 @@ class ScheduleRequest extends FormRequest
 
     public function attributes(): array
     {
-        return ['post_name' => __('Post Name'), 'ministry' => __('Ministry/Organization')];
+        return ['post_name' => __('Post Name'), 'post_grade' => __('Post Grade'), 'ministry' => __('Ministry/Organization')];
     }
 
     public function rules(): array
@@ -34,7 +34,7 @@ class ScheduleRequest extends FormRequest
         $viva = (bool) config('scheduler.types.'.$this->input('exam_type').'.viva', false);
 
         return [
-            'post_name' => 'required|string|max:200', 'ministry' => 'required|string|max:200',
+            'post_name' => 'required|string|max:200', 'post_grade' => 'nullable|integer|min:1|max:65535', 'ministry' => 'required|string|max:200',
             'title' => 'nullable|string|max:200', 'reference' => 'nullable|string|max:100',
             'advertisement_number' => 'nullable|string|max:100', 'advertisement_year' => 'nullable|integer|min:1900|max:9999',
             'exam_type' => ['required', Rule::in(array_keys(config('scheduler.types')))],
