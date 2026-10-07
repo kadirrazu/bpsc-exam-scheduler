@@ -1,6 +1,6 @@
 # BPSC Exam Scheduler
 
-Staff-only BPSC exam scheduling with responsive web access and an Android-ready API. Version: **v1.3.0**.
+Staff-only BPSC exam scheduling with responsive web access and an Android-ready API. Version: **v1.3.1**.
 
 - Administrator: all management and audit access; Editor: schedule entry/edit; Viewer: read/export only.
 - Date filters, conditional Viva boards, XLSX/PDF/print, Bengali/English web UI, and actor/action/time/IP auditing.
@@ -37,16 +37,14 @@ Open `/login`. No default administrator/password is provided. The create-admin c
 
 ## Existing installation / updates
 
-Back up code/database, apply the Paste & Replace patch, then read its update notes. For **v1.3.0**:
+Back up code/database, apply the Paste & Replace patch, then read its update notes. For **v1.3.1**:
 
 ```bash
 php artisan optimize:clear
-php artisan migrate
-php artisan view:clear
 php artisan test
 ```
 
-Keep the existing `.env` and `APP_KEY`. Do not reset the database, run `migrate:fresh`, re-seed users, or regenerate the key. This release needs no dependency install or asset rebuild. Refresh the browser after updates.
+Keep the existing `.env` and `APP_KEY`. Do not reset the database, run `migrate:fresh`, re-seed users, or regenerate the key. This patch applies after v1.3.0 and needs no migration, dependency install or asset rebuild. Refresh the browser after updates.
 
 ## Deployment and operations
 
@@ -54,4 +52,4 @@ Serve only `public/`, require HTTPS, set `APP_ENV=production`, `APP_DEBUG=false`
 
 Web: `/login` → `/dashboard`. API: `/api/v1`. Timezone: `Asia/Dhaka`. UI language selection never changes terminal language. Footer version follows `config/scheduler.php`.
 
-See [API documentation](docs/API.md), [deployment/security](docs/SECURITY-AND-DEPLOYMENT.md), and [v1.3.0 update notes](UPDATE-v1.3.0-POST-GRADE-README-07-10-2026.md).
+See [API documentation](docs/API.md), [deployment/security](docs/SECURITY-AND-DEPLOYMENT.md), and [v1.3.1 update notes](UPDATE-v1.3.1-TEST-SUITE-07-10-2026.md).
