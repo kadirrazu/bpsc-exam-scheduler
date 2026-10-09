@@ -34,7 +34,7 @@ class SchedulerApiTest extends TestCase
 
     private function data(array $more = []): array
     {
-        return array_replace(['ministry' => 'BPSC', 'title' => 'Viva', 'post_name' => 'Viva', 'exam_type' => 'bcs_viva', 'unit' => 'Cadre (Exam)', 'exam_date' => today()->toDateString(), 'candidate_count' => 80, 'board_count' => 4, 'status' => 'scheduled'], $more);
+        return array_replace(['ministry' => 'BPSC', 'title' => 'Viva', 'post_name' => 'Viva', 'exam_type' => 'viva', 'unit' => 'Cadre (Exam)', 'exam_date' => today()->toDateString(), 'candidate_count' => 80, 'board_count' => 4, 'status' => 'scheduled'], $more);
     }
 
     private function bearer(string $token): static

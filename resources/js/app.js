@@ -1,18 +1,55 @@
 import '@tabler/core/dist/js/tabler.min.js';
-// Each count field stays visible with an accurate label when JavaScript is unavailable.
+import {structureTotals} from './board-structure.js';
 const type = document.querySelector('[data-exam-type]');
-if(type) {
-    const toggleCounts = () => {
-        const viva = type.selectedOptions[0]?.dataset.viva === '1';
-        for(const kind of ['center','board']) {
+if (type) {
+    const structure = document.querySelector('[data-board-structure]');
+    const rows = structure?.querySelector('[data-structure-rows]');
+    const reindex = () => rows?.querySelectorAll('[data-structure-row]').forEach((row, index) => {
+        row.querySelector('[data-structure-candidates]').name = `board_structure[${index}][candidates_per_board]`;
+        row.querySelector('[data-structure-boards]').name = `board_structure[${index}][boards]`;
+        row.querySelector('[data-remove-structure]').hidden = false;
+    });
+    const calculate = () => {
+        if (type.value !== 'viva' || !rows) return;
+        const totals = structureTotals([...rows.querySelectorAll('[data-structure-row]')].map(row => ({
+            candidates_per_board: row.querySelector('[data-structure-candidates]').value,
+            boards: row.querySelector('[data-structure-boards]').value,
+        })));
+        if (!totals) return;
+        document.querySelector('#board_count').value = String(totals.boards);
+        document.querySelector('#candidate_count').value = String(totals.candidates);
+    };
+    const toggle = () => {
+        const viva = type.value === 'viva';
+        for (const kind of ['center','board']) {
             const field = document.querySelector(`[data-count="${kind}"]`);
-            if(!field) continue;
+            if (!field) continue;
             const show = Boolean(type.value) && (kind === 'board' ? viva : !viva);
             field.hidden = !show;
-            for(const input of field.querySelectorAll('input')) { input.disabled = !show; input.required = show && kind === 'board'; }
+            field.querySelectorAll('input').forEach(input => {input.disabled = !show; input.required = show && kind === 'board';});
         }
+        const end = document.querySelector('[data-end-time]');
+        if (end) {end.hidden = viva; end.querySelector('input').disabled = viva;}
+        if (structure) {structure.hidden = !viva; structure.querySelectorAll('input').forEach(input => input.disabled = !viva);}
     };
-    type.addEventListener('change',toggleCounts); toggleCounts();
+    structure?.querySelector('[data-add-structure]')?.addEventListener('click', () => {
+        const row = rows.firstElementChild.cloneNode(true);
+        row.querySelectorAll('input').forEach(input => {input.value = '';input.disabled = false;});
+        rows.append(row); reindex(); row.querySelector('input').focus();
+    });
+    if (structure) {
+        structure.querySelector('[data-add-structure]').hidden = false;
+        structure.addEventListener('input', calculate);
+        structure.addEventListener('click', event => {
+            const button = event.target.closest('[data-remove-structure]');
+            if (!button) return;
+            if (rows.children.length > 1) button.closest('[data-structure-row]').remove();
+            else rows.querySelectorAll('input').forEach(input => input.value = '');
+            reindex(); calculate();
+        });
+    }
+    type.addEventListener('change', () => {toggle(); calculate();});
+    reindex(); toggle(); // Never overwrite a saved manual total on initial page load.
 }
 document.querySelectorAll('[data-print]').forEach(button=>button.addEventListener('click',async()=> {
     if(button.dataset.auditUrl) {

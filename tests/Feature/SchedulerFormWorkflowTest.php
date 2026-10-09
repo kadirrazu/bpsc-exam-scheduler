@@ -28,7 +28,7 @@ class SchedulerFormWorkflowTest extends TestCase
 
     private function data(array $changes = []): array
     {
-        return array_replace(['unit' => 'Unit 01', 'exam_type' => 'nc_written', 'post_name' => 'Assistant Director', 'ministry' => 'Ministry / Organization', 'exam_date' => today()->toDateString(), 'status' => 'scheduled'], $changes);
+        return array_replace(['unit' => 'Unit 01', 'exam_type' => 'written', 'post_name' => 'Assistant Director', 'ministry' => 'Ministry / Organization', 'exam_date' => today()->toDateString(), 'status' => 'scheduled'], $changes);
     }
 
     public function test_add_and_edit_follow_the_exact_field_order_and_mandatory_labels(): void
@@ -41,7 +41,7 @@ class SchedulerFormWorkflowTest extends TestCase
             $response = $this->get($url)->assertOk()->assertSee('Number of Exam Centers (Non-Viva) (Optional)')->assertSee('Ministry/Organization')->assertDontSee('Ministry/Organization (Optional)')->assertDontSee('name="title"', false);
             preg_match_all('/<(?:input|select|textarea)\b[^>]*\bid="([^"]+)"[^>]*>/s', $response->getContent(), $matches);
             $ids = array_values(array_filter($matches[1], fn ($id) => $id !== 'board_count'));
-            $this->assertSame(['unit', 'exam_type', 'reference', 'post_name', 'post_grade', 'ministry', 'advertisement_number', 'advertisement_year', 'exam_date', 'start_time', 'end_time', 'candidate_count', 'center_count', 'status', 'notes'], $ids);
+            $this->assertSame(['exam_type', 'unit', 'reference', 'post_name', 'post_grade', 'vacant_posts', 'ministry', 'advertisement_number', 'advertisement_year', 'exam_date', 'start_time', 'end_time', 'candidate_count', 'center_count', 'status', 'notes'], $ids);
         }
     }
 

@@ -8,7 +8,12 @@ class Ui
 {
     public static function digits(mixed $value): string
     {
-        return app()->getLocale() === 'bn' ? strtr((string) $value, array_combine(str_split('0123456789'), preg_split('//u', '০১২৩৪৫৬৭৮৯', -1, PREG_SPLIT_NO_EMPTY))) : (string) $value;
+        return app()->getLocale() === 'bn' ? static::bengaliDigits($value) : (string) $value;
+    }
+
+    public static function bengaliDigits(mixed $value): string
+    {
+        return strtr((string) $value, array_combine(str_split('0123456789'), preg_split('//u', '০১২৩৪৫৬৭৮৯', -1, PREG_SPLIT_NO_EMPTY)));
     }
 
     public static function ascii(mixed $value): mixed
@@ -27,6 +32,20 @@ class Ui
             return '—';
         }
 
-        return static::digits(Carbon::parse($value)->locale(app()->getLocale())->translatedFormat($format));
+        $date = Carbon::parse($value)->locale(app()->getLocale());
+        $displayFormat = '';
+        for ($i = 0; $i < strlen($format); $i++) {
+            $character = $format[$i];
+            if ($character === '\\' && $i + 1 < strlen($format)) {
+                $displayFormat .= $character.$format[++$i];
+            } elseif ($character === 'A' || $character === 'a') {
+                // Preserve English AM/PM while translating dates and display digits.
+                $displayFormat .= '\\'.implode('\\', str_split($date->format($character)));
+            } else {
+                $displayFormat .= $character;
+            }
+        }
+
+        return static::digits($date->translatedFormat($displayFormat));
     }
 }

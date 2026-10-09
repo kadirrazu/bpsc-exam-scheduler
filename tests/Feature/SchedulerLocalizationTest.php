@@ -37,7 +37,7 @@ class SchedulerLocalizationTest extends TestCase
 
     private function data(array $more = []): array
     {
-        $data = array_replace(['ministry' => 'BPSC', 'title' => '৪৭তম বিসিএস লিখিত — বাংলা', 'reference' => '৪৭ বিসিএস', 'exam_type' => 'bcs_written', 'unit' => 'Unit 01', 'exam_date' => today()->toDateString(), 'candidate_count' => '৫০০', 'center_count' => '৫', 'status' => 'scheduled', 'advertisement_number' => 'বিজ্ঞপ্তি-০০১/২০২৬', 'advertisement_year' => '২০২৬', 'notes' => 'বাংলা এবং English দুটোই লেখা যায়।'], $more);
+        $data = array_replace(['ministry' => 'BPSC', 'title' => '৪৭তম বিসিএস লিখিত — বাংলা', 'reference' => '৪৭ বিসিএস', 'exam_type' => 'written', 'unit' => 'Unit 01', 'exam_date' => today()->toDateString(), 'candidate_count' => '৫০০', 'center_count' => '৫', 'status' => 'scheduled', 'advertisement_number' => 'বিজ্ঞপ্তি-০০১/২০২৬', 'advertisement_year' => '২০২৬', 'notes' => 'বাংলা এবং English দুটোই লেখা যায়।'], $more);
         $data['post_name'] = $data['title'];
 
         return $data;
@@ -63,7 +63,7 @@ class SchedulerLocalizationTest extends TestCase
         $this->assertSame(UserRole::Viewer, $u->fresh()->role);
         $this->assertSame(1, $u->fresh()->auth_version);
         $this->assertSame(1, $u->tokens()->count());
-        $this->get('/dashboard')->assertOk()->assertSee('Exam Schedules');
+        $this->get('/dashboard')->assertOk()->assertSee("This Week&#039;s Schedule", false);
         $this->post('/logout');
         $this->post('/login', ['email' => $u->email, 'password' => 'password'])->assertRedirect();
         $this->get('/dashboard')->assertOk()->assertSee('lang="en"', false);
@@ -178,9 +178,9 @@ class SchedulerLocalizationTest extends TestCase
         $u = $this->user(UserRole::Viewer);
         $token = $u->createToken('android')->plainTextToken;
         $this->app['auth']->forgetGuards();
-        $this->withToken($token)->withHeader('Accept-Language', 'en')->getJson('/api/v1/options')->assertOk()->assertJsonPath('exam_types.bcs_written.label', 'BCS Written')->assertJsonPath('units.0', 'Unit 01');
+        $this->withToken($token)->withHeader('Accept-Language', 'en')->getJson('/api/v1/options')->assertOk()->assertJsonPath('exam_types.written.label', 'Written')->assertJsonPath('units.0', 'Unit 01');
         $this->app['auth']->forgetGuards();
-        $this->withHeader('Accept-Language', 'bn-BD')->getJson('/api/v1/options')->assertOk()->assertJsonPath('exam_types.bcs_written.label', 'BCS Written')->assertJsonPath('unit_labels.Unit 01', 'Unit 01');
+        $this->withHeader('Accept-Language', 'bn-BD')->getJson('/api/v1/options')->assertOk()->assertJsonPath('exam_types.written.label', 'Written')->assertJsonPath('unit_labels.Unit 01', 'Unit 01');
         $this->app['auth']->forgetGuards();
         $this->putJson('/api/v1/profile', ['name' => $u->name, 'email' => $u->email, 'designation_id' => $u->designation_id, 'preferred_locale' => 'en'])->assertOk();
         $this->assertSame('en', $u->fresh()->preferred_locale);

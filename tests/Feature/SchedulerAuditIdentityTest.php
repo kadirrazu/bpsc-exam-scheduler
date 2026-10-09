@@ -31,16 +31,16 @@ class SchedulerAuditIdentityTest extends TestCase
 
     private function data(array $changes = []): array
     {
-        return array_replace(['ministry' => 'BPSC', 'post_name' => 'Assistant Director', 'exam_type' => 'nc_written', 'unit' => 'Unit 01', 'exam_date' => today()->toDateString(), 'center_count' => 2, 'status' => 'proposed'], $changes);
+        return array_replace(['ministry' => 'BPSC', 'post_name' => 'Assistant Director', 'exam_type' => 'written', 'unit' => 'Unit 01', 'exam_date' => today()->toDateString(), 'center_count' => 2, 'status' => 'proposed'], $changes);
     }
 
-    public function test_bengali_ui_keeps_designation_role_unit_status_labels_and_values_in_english(): void
+    public function test_bengali_ui_translates_unit_heading_and_keeps_reference_values_in_english(): void
     {
         $user = $this->user();
         $this->actingAs($user)->withSession(['auth_version' => $user->auth_version]);
-        $this->get('/users/create')->assertOk()->assertSee('Designation')->assertSee('Role')->assertSee('Unit')->assertSee('Secretary')->assertSee('Administrator')->assertSee('Editor')->assertSee('Viewer')->assertSee('IT Section')->assertDontSee('সচিব')->assertDontSee('সম্পাদক')->assertDontSee('দর্শক');
+        $this->get('/users/create')->assertOk()->assertSee('Designation')->assertSee('Role')->assertSee('ইউনিট')->assertSee('Secretary')->assertSee('Administrator')->assertSee('Editor')->assertSee('Viewer')->assertSee('IT Section')->assertDontSee('সচিব')->assertDontSee('সম্পাদক')->assertDontSee('দর্শক');
         $this->get('/users')->assertOk()->assertSee('Status')->assertSee('Active')->assertSee('Secretary');
-        $this->get('/schedules/create')->assertOk()->assertSee('Unit')->assertSee('Status')->assertSee('Proposed')->assertSee('Scheduled')->assertSee('Completed');
+        $this->get('/schedules/create')->assertOk()->assertSee('ইউনিট')->assertSee('Status')->assertSee('Proposed')->assertSee('Scheduled')->assertSee('Completed');
         $this->assertSame('Administrator', UserRole::Admin->label());
         $token = $user->createToken('phone')->plainTextToken;
         $this->app['auth']->forgetGuards();

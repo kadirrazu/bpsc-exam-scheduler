@@ -33,7 +33,7 @@ class SchedulerOptionalFieldsTest extends TestCase
 
     private function data(array $extra = []): array
     {
-        return array_replace(['ministry' => 'BPSC', 'post_name' => 'সহকারী পরিচালক', 'exam_type' => 'nc_written', 'unit' => 'Unit 01', 'exam_date' => today()->toDateString(), 'center_count' => 2, 'status' => 'proposed'], $extra);
+        return array_replace(['ministry' => 'BPSC', 'post_name' => 'সহকারী পরিচালক', 'exam_type' => 'written', 'unit' => 'Unit 01', 'exam_date' => today()->toDateString(), 'center_count' => 2, 'status' => 'proposed'], $extra);
     }
 
     public function test_entry_has_no_title_and_accepts_omitted_optional_fields(): void
@@ -46,9 +46,9 @@ class SchedulerOptionalFieldsTest extends TestCase
         $this->assertNull($schedule->reference);
         $this->assertNull($schedule->notes);
         $this->assertSame('proposed', $schedule->status);
-        $this->assertStringContainsString('NC Written', $schedule->title);
+        $this->assertStringContainsString('Written', $schedule->title);
         $this->assertStringContainsString('Unit 01', $schedule->title);
-        $this->get('/schedules?status=proposed')->assertOk()->assertSee('status-proposed')->assertSee('Proposed')->assertSee('পরীক্ষার্থী সংখ্যা দেওয়া হয়নি');
+        $this->get('/schedules?status=proposed')->assertOk()->assertSee('status-proposed')->assertSee('Proposed')->assertDontSee('পরীক্ষার্থী সংখ্যা দেওয়া হয়নি');
         $this->get('/schedules/export/print')->assertOk()->assertSee('background-color:#FFF4CC', false)->assertSee('—');
         $log = AuditLog::where('action', 'examschedule.created')->firstOrFail();
         $this->assertNull($log->details['after']['candidate_count'] ?? null);
@@ -78,7 +78,7 @@ class SchedulerOptionalFieldsTest extends TestCase
         $this->postJson('/api/v1/schedules', $this->data())->assertCreated()->assertJsonPath('data.candidate_count', null)->assertJsonPath('data.status', 'proposed');
         $this->postJson('/api/v1/schedules', $this->data(['candidate_count' => 0, 'status' => 'scheduled']))->assertCreated()->assertJsonPath('data.candidate_count', 0);
         $this->postJson('/api/v1/schedules', $this->data(['candidate_count' => 50, 'status' => 'completed']))->assertCreated();
-        $this->getJson('/api/v1/schedules')->assertOk()->assertJsonPath('summary.candidates_unspecified', 1)->assertJsonPath('summary.candidates', 50);
+        $this->getJson('/api/v1/schedules')->assertOk()->assertJsonPath('summary.exams', 3)->assertJsonPath('summary.units', 1)->assertJsonPath('summary.exam_types', 1)->assertJsonPath('summary.grades', 0);
         $this->getJson('/api/v1/options')->assertOk()->assertJsonPath('statuses.proposed', 'Proposed');
         $bytes = $this->get('/api/v1/schedules/export/xlsx')->assertOk()->getContent();
         $tmp = tempnam(sys_get_temp_dir(), 'scheduler-optional');
@@ -86,12 +86,13 @@ class SchedulerOptionalFieldsTest extends TestCase
             file_put_contents($tmp, $bytes);
             $book = IOFactory::load($tmp);
             $sheet = $book->getActiveSheet();
-            $this->assertContains($sheet->getCell('K5')->getValue(), [null, '']);
-            $this->assertSame(0, $sheet->getCell('K6')->getValue());
+            $this->assertSame(50, $sheet->getCell('I5')->getValue());
+            $this->assertContains($sheet->getCell('I7')->getValue(), [null, '']);
+            $this->assertSame(0, $sheet->getCell('I6')->getValue());
             $this->assertSame('Post Code', $sheet->getCell('E4')->getValue());
-            $this->assertSame('Notes/Remarks', $sheet->getCell('O4')->getValue());
-            foreach ([5 => 'FFF4CC', 6 => 'E6F0FF', 7 => 'E0F2E5'] as $row => $color) {
-                $this->assertSame($color, $sheet->getStyle('N'.$row)->getFill()->getStartColor()->getRGB());
+            $this->assertSame('Notes/Remarks', $sheet->getCell('M4')->getValue());
+            foreach ([5 => 'E0F2E5', 6 => 'E6F0FF', 7 => 'FFF4CC'] as $row => $color) {
+                $this->assertSame($color, $sheet->getStyle('L'.$row)->getFill()->getStartColor()->getRGB());
             }
             $book->disconnectWorksheets();
         } finally {
@@ -127,8 +128,8 @@ class SchedulerOptionalFieldsTest extends TestCase
             $sheet = $book->getActiveSheet();
             $this->assertSame('Post Name', $sheet->getCell('D4')->getValue());
             $this->assertSame($data['post_name'], $sheet->getCell('D5')->getValue());
-            $this->assertSame('Ministry/Organization', $sheet->getCell('P4')->getValue());
-            $this->assertSame($data['ministry'], $sheet->getCell('P5')->getValue());
+            $this->assertSame('Ministry/Organization', $sheet->getCell('N4')->getValue());
+            $this->assertSame($data['ministry'], $sheet->getCell('N5')->getValue());
             $book->disconnectWorksheets();
         } finally {
             unlink($tmp);

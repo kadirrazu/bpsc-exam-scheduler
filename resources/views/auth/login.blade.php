@@ -17,12 +17,8 @@
 
             @if ($errors->any())
                 <div class="alert alert-danger" role="alert">
-                    <div class="fw-semibold mb-1">
-                        {{ __('Login failed') }}
-                    </div>
-
                     <ul class="mb-0 ps-3">
-                        @foreach ($errors->all() as $error)
+                        @foreach (array_unique($errors->all()) as $error)
                             <li>{{ $error }}</li>
                         @endforeach
                     </ul>
@@ -57,11 +53,6 @@
                         required
                     >
 
-                    @error('email')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
                 </div>
 
                 <div class="mb-3">
@@ -82,11 +73,6 @@
                         required
                     ><button type="button" class="password-toggle" data-password-toggle data-show-label="{{ __('Show password') }}" data-hide-label="{{ __('Hide password') }}" aria-label="{{ __('Show password') }}" title="{{ __('Show password') }}" aria-pressed="false" hidden><i class="bi bi-eye" aria-hidden="true"></i></button></div>
 
-                    @error('password')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                    @enderror
                 </div>
 
                 <div class="form-footer">

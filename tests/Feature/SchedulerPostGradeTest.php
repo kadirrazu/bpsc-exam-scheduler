@@ -31,7 +31,7 @@ class SchedulerPostGradeTest extends TestCase
 
     private function data(array $changes = []): array
     {
-        return array_replace(['post_name' => 'Assistant Director', 'ministry' => 'BPSC', 'unit' => 'Unit 01', 'exam_type' => 'nc_written', 'exam_date' => today()->toDateString(), 'status' => 'scheduled'], $changes);
+        return array_replace(['post_name' => 'Assistant Director', 'ministry' => 'BPSC', 'unit' => 'Unit 01', 'exam_type' => 'written', 'exam_date' => today()->toDateString(), 'status' => 'scheduled'], $changes);
     }
 
     public function test_grade_accepts_bengali_digits_and_is_numeric_in_api_audits_and_exports(): void
@@ -54,9 +54,9 @@ class SchedulerPostGradeTest extends TestCase
             file_put_contents($tmp, $response->getContent());
             $book = IOFactory::load($tmp);
             $sheet = $book->getActiveSheet();
-            $this->assertSame('Post Grade', $sheet->getCell('Q4')->getValue());
-            $this->assertSame(10, $sheet->getCell('Q5')->getValue());
-            $this->assertSame('n', $sheet->getCell('Q5')->getDataType());
+            $this->assertSame('Post Grade', $sheet->getCell('O4')->getValue());
+            $this->assertSame(10, $sheet->getCell('O5')->getValue());
+            $this->assertSame('n', $sheet->getCell('O5')->getDataType());
             $book->disconnectWorksheets();
         } finally {
             unlink($tmp);

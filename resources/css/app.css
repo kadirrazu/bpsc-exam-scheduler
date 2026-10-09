@@ -1,8 +1,8 @@
 @import "@tabler/core/dist/css/tabler.min.css";
 @import "bootstrap-icons/font/bootstrap-icons.css";
-:root { --tblr-primary:#2e7165; --tblr-primary-rgb:46,113,101; }
+:root { margin-left:0; margin-right:0; --tblr-primary:#2e7165; --tblr-primary-rgb:46,113,101; }
 body { min-height:100vh; background:#f5f8fa; color:#273c4f; }
-.scheduler-header { background:#e7f0ed; border-bottom:1px solid #d6e4df; }
+.scheduler-header { width:100%; margin:0; background:#e7f0ed; border-bottom:1px solid #d6e4df; }
 .scheduler-brand { white-space:normal; font-size:1rem; font-weight:700; line-height:1.4; color:#24473e; }
 .scheduler-brand small { display:block; font-size:.8rem; font-weight:400; color:#557266; }
 .page-wrapper { min-width:0; }
@@ -32,11 +32,11 @@ html[lang="bn"] .scheduler-brand {font-size:1.1rem;line-height:1.35;}
 @media(max-width:575px) {.scheduler-header .container-xl {row-gap:10px;} .scheduler-header .navbar-nav.order-md-last {margin-left:auto;} html[lang="bn"] .scheduler-brand {font-size:.9rem;max-width:215px;}}
 
 /* Two rows keep branding and navigation distinct at every screen width. */
-.scheduler-masthead { display:flex; justify-content:space-between; align-items:center; gap:16px; padding-top:20px; padding-bottom:20px; }
+.scheduler-masthead { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:16px; padding-top:20px; padding-bottom:20px; }
 .scheduler-product {display:flex;align-items:center;gap:12px;color:#245c50;font-weight:700;font-size:1.35rem;}
 .product-name {font-family:Arial,sans-serif;}
 .brand-emblem {display:grid;place-items:center;width:42px;height:42px;border-radius:12px;background:#2e7165;color:white;font-size:1.5rem;flex-shrink:0;}
-.scheduler-commission {font-weight:600;color:#3a5e55;text-align:right;}
+.scheduler-commission {font-family:Arial,sans-serif;font-size:clamp(1rem,.85rem + .5vw,1.35rem);font-weight:400;line-height:1.4;color:#3a5e55;text-align:right;max-width:100%;}
 .scheduler-navigation {background:#fff;border-top:1px solid #d6e4df;min-height:62px;}
 .scheduler-navigation .nav-link {gap:8px;border-radius:8px;padding:.65rem .8rem;}
 .scheduler-navigation .nav-item.active>.nav-link {background:#e7f0ed;color:#245c50;}
@@ -52,7 +52,7 @@ html[lang="bn"] .scheduler-brand {font-size:1.1rem;line-height:1.35;}
 .password-toggle:focus-visible {outline:2px solid #2e7165;outline-offset:2px;}
 .password-control:has(.is-invalid) input {background-image:none;}
 .password-control:has(.is-invalid)+.invalid-feedback {display:block;}
-.scheduler-footer {margin-top:auto;padding:18px 0;background:#fff;border-top:1px solid #dce5e1;color:#526779;font-family:Arial,sans-serif;font-size:12px;}
+.scheduler-footer {width:100%;margin-top:auto;padding:18px 0;background:#edf2f8;border-top:2px solid #cad8e8;color:#526779;font-family:Arial,sans-serif;font-size:12px;}
 .backend-footer-main,.backend-footer-details {display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px 24px;}
 .backend-footer-main {padding-bottom:10px;border-bottom:1px solid #e4ebe7;margin-bottom:10px;}
 .backend-footer-details {font-size:11px;color:#64748b;}
@@ -60,7 +60,7 @@ html[lang="bn"] .scheduler-brand {font-size:1.1rem;line-height:1.35;}
 @media(max-width:767px) {
  .scheduler-masthead {flex-wrap:wrap;padding-top:14px;padding-bottom:14px;gap:8px;}
  .scheduler-product {font-size:1.15rem;}
- .scheduler-commission {width:100%;text-align:left;padding-left:54px;}
+ .scheduler-commission {width:100%;text-align:left;padding-left:0;}
  .scheduler-account {margin-left:auto;}
  .scheduler-navigation .navbar-collapse {padding-top:10px;}
  .scheduler-navigation .dropdown-menu {box-shadow:none;margin:4px 0 8px;}
@@ -68,12 +68,11 @@ html[lang="bn"] .scheduler-brand {font-size:1.1rem;line-height:1.35;}
  .scheduler-footer .backend-footer-main,.scheduler-footer .backend-footer-details {flex-direction:column;gap:6px;}
 }
 
-/* Preserve the original Choice footer panel styling and its two text rows. */
-.scheduler-footer {background:transparent;border:0;padding:0 12px 20px;}
-.scheduler-footer>.container-xl {border:1px solid #dce5ef;border-top:2px solid #cad8e8;background:#edf2f8;border-radius:12px;padding:18px 24px;line-height:1.6;}
+/* Full-width footer background; text stays inside the shared container. */
+.scheduler-footer>.container-xl {padding-left:24px;padding-right:24px;line-height:1.6;}
 .scheduler-footer .backend-footer-main {border:0;padding-bottom:0;margin-bottom:8px;}
 .public-footer-credit {color:#64748b;}
-@media(max-width:575px) {.scheduler-footer>.container-xl {padding:16px;}}
+@media(max-width:575px) {.scheduler-footer>.container-xl {padding-left:16px;padding-right:16px;}}
 
 .table td.status-cell {min-width:105px;text-align:center;}
 .table td.status-proposed {background:#fff4cc;color:#725400;}
@@ -81,3 +80,7 @@ html[lang="bn"] .scheduler-brand {font-size:1.1rem;line-height:1.35;}
 .table td.status-completed {background:#e0f2e5;color:#245f3a;}
 .table td.status-postponed {background:#fce8d5;color:#874c16;}
 .table td.status-cancelled {background:#fce3e3;color:#8d3434;}
+
+/* Schedule headings are bold; descriptive/action columns retain left alignment. */
+.schedule-table th {font-weight:700;vertical-align:middle;}
+.schedule-table :is(th,td):not(.exam-title):not(.schedule-actions) {text-align:center;vertical-align:middle;}

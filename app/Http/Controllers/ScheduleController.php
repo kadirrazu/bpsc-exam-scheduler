@@ -16,11 +16,29 @@ class ScheduleController extends Controller
     public function index(Request $r, ScheduleQuery $q)
     {
         $filters = $q->filters($r);
+        $isDashboard = $r->routeIs('dashboard');
         $query = $q->query($filters);
-        $summary = ['exams' => (clone $query)->count(), 'candidates' => (clone $query)->sum('candidate_count'), 'candidates_unspecified' => (clone $query)->whereNull('candidate_count')->count(), 'centers' => (clone $query)->sum('center_count'), 'boards' => (clone $query)->sum('board_count')];
-        $schedules = $query->paginate(25)->withQueryString();
-        $response = $r->is('api/*') ? response()->json(['filters' => $filters, 'summary' => $summary, 'schedules' => $schedules]) : response()->view('schedules.index', compact('filters', 'summary', 'schedules'));
-        app(Audit::class)->record('report.viewed', ['report' => 'exam_schedule_list', 'format' => $r->is('api/*') ? 'json' : 'web', 'filters' => $filters, 'row_count' => $schedules->count(), 'total_rows' => $schedules->total(), 'page' => $schedules->currentPage(), 'locale' => app()->getLocale()]);
+        $summary = ['exams' => (clone $query)->count(), 'units' => (clone $query)->distinct()->count('unit'), 'exam_types' => (clone $query)->distinct()->count('exam_type'), 'grades' => (clone $query)->distinct()->count('post_grade')];
+        if ($filters['display'] === 'grouped') {
+            $direction = $filters['scope'] === 'all' ? 'desc' : 'asc';
+            $datePage = max(1, (int) $r->input('page', 1));
+            $totalDates = (clone $query)->reorder()->distinct()->count('exam_date');
+            $dateItems = (clone $query)->reorder()->select('exam_date')->distinct()
+                ->orderBy('exam_date', $direction)->forPage($datePage, 25)->get();
+            $pagination = (new \Illuminate\Pagination\LengthAwarePaginator($dateItems, $totalDates, 25, $datePage, ['path' => $r->url()]))->withQueryString();
+            $dates = $pagination->getCollection()->pluck('exam_date')->map(fn ($date) => $date->format('Y-m-d'));
+            $schedules = (clone $query)->whereIn('exam_date', $dates)->get();
+            $rowOffset = $dates->isEmpty() ? 0 : (clone $query)->where('exam_date', $direction === 'desc' ? '>' : '<', $dates->first())->count();
+            $pagination->setCollection($schedules->groupBy(fn ($s) => $s->exam_date->format('Y-m-d'))
+                ->map(fn ($rows, $date) => ['exam_date' => $date, 'exams' => $rows->values()])->values());
+        } else {
+            $schedules = $query->paginate(25)->withQueryString();
+            $pagination = $schedules;
+            $rowOffset = max(0, ($schedules->firstItem() ?? 1) - 1);
+        }
+        $dateSpans = collect($filters['display'] === 'flat' ? $schedules->items() : $schedules)->groupBy(fn ($s) => $s->exam_date->format('Y-m-d'))->map->count();
+        $response = $r->is('api/*') ? response()->json(['filters' => $filters, 'summary' => $summary, 'schedules' => $pagination]) : response()->view('schedules.index', compact('filters', 'summary', 'schedules', 'isDashboard', 'pagination', 'rowOffset', 'dateSpans'));
+        app(Audit::class)->record('report.viewed', ['report' => 'exam_schedule_list', 'format' => $r->is('api/*') ? 'json' : 'web', 'filters' => $filters, 'row_count' => $schedules->count(), 'total_rows' => $summary['exams'], 'page' => $pagination->currentPage(), 'pagination_unit' => $filters['display'] === 'grouped' ? 'dates' : 'exams', 'locale' => app()->getLocale()]);
 
         return $response;
     }

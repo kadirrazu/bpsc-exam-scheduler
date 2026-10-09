@@ -64,6 +64,6 @@ class AuthController extends Controller
 
     public function options()
     {
-        return response()->json(['exam_types' => array_map(fn ($t) => array_replace($t, ['label' => __($t['label'])]), config('scheduler.types')), 'units' => config('scheduler.units'), 'user_units' => config('scheduler.user_units'), 'unit_labels' => array_combine(config('scheduler.units'), array_map(fn ($u) => __($u), config('scheduler.units'))), 'statuses' => array_map(fn ($label) => __($label), config('scheduler.statuses')), 'roles' => UserRole::options(), 'designations' => Designation::where('is_active', true)->orderBy('sort_order')->orderBy('name')->get(['id', 'name'])]);
+        return response()->json(['exam_types' => array_map(fn ($t) => array_replace($t, ['label' => __($t['label'])]), config('scheduler.types')), 'units' => config('scheduler.units'), 'user_units' => config('scheduler.user_units'), 'unit_labels' => array_combine(config('scheduler.units'), config('scheduler.units')), 'statuses' => array_map(fn ($label) => __($label), config('scheduler.statuses')), 'roles' => UserRole::options(), 'designations' => Designation::where('is_active', true)->orderBy('sort_order')->orderBy('name')->get(['id', 'name'])]);
     }
 }

@@ -38,8 +38,9 @@ class SchedulerTest extends TestCase
 
     private function payload(array $extra = []): array
     {
-        $data = array_replace(['ministry' => 'BPSC', 'title' => '47th BCS Written — English', 'exam_type' => 'bcs_written', 'reference' => '47 BCS', 'unit' => 'Unit 01', 'exam_date' => today()->toDateString(), 'start_time' => '10:00', 'end_time' => '13:00', 'candidate_count' => 500, 'center_count' => 5, 'status' => 'scheduled'], $extra);
+        $data = array_replace(['ministry' => 'BPSC', 'title' => '47th Written — English', 'exam_type' => 'written', 'reference' => '47 BCS', 'unit' => 'Unit 01', 'exam_date' => today()->toDateString(), 'start_time' => '10:00', 'end_time' => '13:00', 'candidate_count' => 500, 'center_count' => 5, 'status' => 'scheduled'], $extra);
         $data['post_name'] = $data['title'];
+        if ($data['exam_type'] === 'viva') { $data['end_time'] = null; }
 
         return $data;
     }
@@ -119,11 +120,11 @@ class SchedulerTest extends TestCase
     public function test_viva_uses_boards_and_other_types_use_centers(): void
     {
         $this->staff($this->user(UserRole::Editor));
-        $this->post('/schedules', $this->payload(['exam_type' => 'nc_viva', 'center_count' => null, 'board_count' => 4]))->assertRedirect();
+        $this->post('/schedules', $this->payload(['exam_type' => 'viva', 'center_count' => null, 'board_count' => 4]))->assertRedirect();
         $s = ExamSchedule::firstOrFail();
         $this->assertNull($s->center_count);
         $this->assertSame(4, $s->board_count);
-        $this->post('/schedules', $this->payload(['exam_type' => 'nc_viva']))->assertSessionHasErrors(['board_count', 'center_count']);
+        $this->post('/schedules', $this->payload(['exam_type' => 'viva']))->assertSessionHasErrors(['board_count', 'center_count']);
         $this->post('/schedules', $this->payload(['board_count' => 2]))->assertSessionHasErrors('board_count');
         $this->put('/schedules/'.$s->id, $this->payload(['version' => 1]))->assertRedirect();
         $this->assertNull($s->fresh()->board_count);
@@ -172,18 +173,18 @@ class SchedulerTest extends TestCase
 
     public function test_filters_and_summary_are_for_all_matching_rows(): void
     {
-        $this->schedule(['ministry' => 'BPSC', 'title' => 'NC Row', 'exam_type' => 'nc_written', 'unit' => 'Unit 02', 'candidate_count' => 200]);
+        $this->schedule(['ministry' => 'BPSC', 'title' => 'NC Row', 'exam_type' => 'written', 'unit' => 'Unit 02', 'candidate_count' => 200]);
         $this->schedule(['ministry' => 'BPSC', 'title' => 'Other Row', 'status' => 'cancelled']);
         $this->staff($this->user());
-        $this->get('/schedules?exam_type=nc_written&unit=Unit%2002&status=scheduled')->assertOk()->assertSee('NC Row')->assertDontSee('Other Row')->assertViewHas('summary', fn ($s) => $s['exams'] === 1 && (int) $s['candidates'] === 200);
+        $this->get('/schedules?exam_type=written&unit=Unit%2002&status=scheduled')->assertOk()->assertSee('NC Row')->assertDontSee('Other Row')->assertViewHas('summary', fn ($s) => $s['exams'] === 1 && $s['units'] === 1 && $s['exam_types'] === 1);
         $this->get('/schedules?from=2027-01-01&to=2026-01-01')->assertSessionHasErrors('to');
-        $this->get('/schedules?from=2020-01-01&to=2026-01-01')->assertUnprocessable();
+        $this->get('/schedules?from=2020-01-01&to=2026-01-01')->assertOk();
     }
 
     public function test_empty_filtered_schedule_and_print_view_render(): void
     {
         $this->staff($this->user(UserRole::Viewer));
-        $this->get('/dashboard')->assertOk()->assertSee('No exams scheduled');
+        $this->get('/dashboard')->assertOk()->assertSee('No exams match these filters.');
         $this->get('/schedules/export/print')->assertOk()->assertSee('Print Schedule');
     }
 

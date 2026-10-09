@@ -16,7 +16,7 @@ class ScheduleWriter
             $s->created_by = $s->updated_by = $actor->id;
             $s->save();
 
-            return $s;
+            return $s->refresh();
         });
     }
 
@@ -61,6 +61,11 @@ class ScheduleWriter
         }
         $viva = (bool) config('scheduler.types.'.$d['exam_type'].'.viva');
         $d[$viva ? 'center_count' : 'board_count'] = null;
+        $d['vacant_posts'] = $d['vacant_posts'] ?? null;
+        $d['board_structure'] = $viva ? ($d['board_structure'] ?? null) : null;
+        if ($viva) {
+            $d['end_time'] = null;
+        }
 
         return $d;
     }

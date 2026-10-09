@@ -27,7 +27,7 @@ class SchedulePdf
         ]);
         $pdf->SetTitle(__('Examination Schedule'));
         $pdf->SetAuthor(__('Bangladesh Public Service Commission (BPSC)'));
-        $footer = '<table style="width:100%;font-size:8px"><tr><td style="border:0">'.__('Software Developed By:').' <b>'.__('IT Section, BPSC').'</b> | '.__('Printed:').' '.Ui::date(now(), 'd M Y h:i A').'</td><td style="border:0;text-align:right">'.__('Page').' {PAGENO} '.__('of').' {nbpg}</td></tr></table>';
+        $footer = '<table style="width:100%;font-size:7pt"><tr><td style="width:80%;border:0;text-align:center">'.__('Printed:').' '.Ui::date(now(), 'd M Y h:i A').'</td><td style="width:20%;border:0;text-align:right">'.__('Page').' {PAGENO} '.__('of').' {nbpg}</td></tr></table>';
         $pdf->SetHTMLFooter($this->fontRuns($footer));
         $html = preg_replace('/<div class="credit">.*?<\/div>/s', '', $html);
         preg_match('/<style[^>]*>(.*?)<\/style>/si', $html, $styles);
@@ -35,6 +35,24 @@ class SchedulePdf
         preg_match('/<body[^>]*>(.*?)<\/body>/si', $html, $body);
         $pdf->WriteHTML($css, HTMLParserMode::HEADER_CSS);
         $pdf->WriteHTML($this->fontRuns($body[1] ?? ''), HTMLParserMode::HTML_BODY);
+
+        // CSS text opacity is not applied by mPDF. Draw the credit with true PDF alpha.
+        $lastPage = $pdf->page;
+        $pdf->SetAutoPageBreak(false);
+        for ($page = 1; $page <= $lastPage; $page++) {
+            $pdf->page = $page;
+            $pdf->SetAlpha(0.65);
+            $pdf->SetTextColor(0, 0, 0);
+            $pdf->SetXY(12, $pdf->h - 13);
+            $pdf->SetFont('dejavusans', '', 7, true, true);
+            $prefix = 'Software Developed By: ';
+            $pdf->Cell($pdf->GetStringWidth($prefix) + 1, 3, $prefix);
+            $pdf->SetFont('dejavusans', 'B', 7, true, true);
+            $pdf->Cell($pdf->GetStringWidth('IT Section, BPSC') + 1, 3, 'IT Section, BPSC');
+            $pdf->SetAlpha(1);
+            $pdf->SetFont('dejavusans', '', 7);
+        }
+        $pdf->page = $lastPage;
 
         return $pdf->Output('', 'S');
     }
@@ -52,20 +70,25 @@ class SchedulePdf
                 $nodes[] = $node;
             }
             foreach ($nodes as $node) {
-                $pieces = preg_split('/([\x{0980}-\x{09FF}\x{200C}\x{200D}]+(?:[ \t]+[\x{0980}-\x{09FF}\x{200C}\x{200D}]+)*)/u', $node->nodeValue, -1, PREG_SPLIT_DELIM_CAPTURE);
-                if (count($pieces) < 2) {
-                    continue;
+                $bold = false;
+                for ($parent = $node->parentNode; $parent instanceof \DOMElement; $parent = $parent->parentNode) {
+                    if (preg_match('/font-weight\s*:\s*(normal|[1-9]00|bold|bolder)\b/i', $parent->getAttribute('style'), $weight)) {
+                        $bold = in_array(strtolower($weight[1]), ['bold', 'bolder', '600', '700', '800', '900'], true);
+                        break;
+                    }
+                    if (in_array(strtolower($parent->tagName), ['b', 'strong', 'th', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'], true)) {
+                        $bold = true;
+                        break;
+                    }
                 }
+                $pieces = preg_split('/([\x{0980}-\x{09FF}\x{200C}\x{200D}]+(?:[ \t]+[\x{0980}-\x{09FF}\x{200C}\x{200D}]+)*)/u', $node->nodeValue, -1, PREG_SPLIT_DELIM_CAPTURE);
                 $fragment = $document->createDocumentFragment();
                 foreach ($pieces as $index => $piece) {
-                    if ($index % 2 === 1) {
-                        $span = $document->createElement('span');
-                        $span->setAttribute('style', 'font-family:nikosh');
-                        $span->appendChild($document->createTextNode($piece));
-                        $fragment->appendChild($span);
-                    } else {
-                        $fragment->appendChild($document->createTextNode($piece));
-                    }
+                    if ($piece === '') { continue; }
+                    $span = $document->createElement('span');
+                    $span->setAttribute('style', 'font-family:'.($index % 2 === 1 ? 'nikosh' : 'dejavusans').($bold ? ';font-weight:bold' : ''));
+                    $span->appendChild($document->createTextNode($piece));
+                    $fragment->appendChild($span);
                 }
                 $node->parentNode->replaceChild($fragment, $node);
             }

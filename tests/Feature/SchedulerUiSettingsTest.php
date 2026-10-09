@@ -84,7 +84,7 @@ class SchedulerUiSettingsTest extends TestCase
     public function test_exam_units_differ_from_staff_units_and_reject_old_or_staff_only_values(): void
     {
         $this->staff(UserRole::Editor);
-        $data = ['ministry' => 'BPSC', 'title' => 'BCS Viva', 'post_name' => 'BCS Viva', 'exam_type' => 'bcs_viva', 'unit' => 'Cadre (Exam)', 'exam_date' => today()->toDateString(), 'candidate_count' => 20, 'board_count' => 2, 'status' => 'scheduled'];
+        $data = ['ministry' => 'BPSC', 'title' => 'Viva', 'post_name' => 'Viva', 'exam_type' => 'viva', 'unit' => 'Cadre (Exam)', 'exam_date' => today()->toDateString(), 'candidate_count' => 20, 'board_count' => 2, 'status' => 'scheduled'];
         foreach (['BCS', 'Departmental', 'Senior Scale', 'IT Section', 'Cadre (Confidential)'] as $unit) {
             $this->post('/schedules', array_replace($data, ['unit' => $unit]))->assertSessionHasErrors('unit');
         }
@@ -104,7 +104,7 @@ class SchedulerUiSettingsTest extends TestCase
         $this->staff();
         $this->get('/dashboard')->assertOk()->assertSee('পরীক্ষা ব্যবস্থাপনা')->assertSee('ব্যবহারকারী ব্যবস্থাপনা')->assertDontSee('Administrator');
         $this->get('/profile')->assertOk()->assertSee('Role')->assertSee('Administrator');
-        $this->get('/schedules/create')->assertOk()->assertSee('NC Preliminary (MCQ Type)')->assertSee('BCS Viva')->assertSee('Cadre (Exam)')->assertDontSee('value="BCS"', false)->assertDontSee('ইউনিট ০১');
+        $this->get('/schedules/create')->assertOk()->assertSee('Preliminary (MCQ Type)')->assertSee('Viva')->assertSee('Cadre (Exam)')->assertDontSee('value="BCS"', false)->assertDontSee('ইউনিট ০১');
         $this->get('/users/create')->assertOk()->assertSee('Cadre (Confidential)')->assertSee('Law Wing')->assertSee('data-password-toggle', false);
     }
 
@@ -113,7 +113,7 @@ class SchedulerUiSettingsTest extends TestCase
         $admin = $this->staff();
         $token = $admin->createToken('phone')->plainTextToken;
         $this->app['auth']->forgetGuards();
-        $this->withToken($token)->withHeader('Accept-Language', 'bn')->getJson('/api/v1/options')->assertOk()->assertJsonPath('exam_types.nc_preliminary.label', 'NC Preliminary (MCQ Type)')->assertJsonPath('unit_labels.Unit 01', 'Unit 01')->assertJsonPath('units.21', 'Cadre (Exam)')->assertJsonPath('user_units.26', 'Law Wing');
+        $this->withToken($token)->withHeader('Accept-Language', 'bn')->getJson('/api/v1/options')->assertOk()->assertJsonPath('exam_types.preliminary.label', 'Preliminary (MCQ Type)')->assertJsonPath('unit_labels.Unit 01', 'Unit 01')->assertJsonPath('units.21', 'Cadre (Exam)')->assertJsonPath('user_units.26', 'Law Wing');
         $id = $this->postJson('/api/v1/users', $this->userData())->assertCreated()->assertJsonPath('data.unit', 'Cadre (Confidential)')->json('data.id');
         $this->putJson('/api/v1/users/'.$id, $this->userData(['unit' => 'Administration Wing', 'password' => '', 'password_confirmation' => '']))->assertOk()->assertJsonPath('data.unit', 'Administration Wing');
     }

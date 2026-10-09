@@ -10,7 +10,7 @@
 <header class="scheduler-header d-print-none">
     <div class="container-xl scheduler-masthead">
         <a href="{{ route('dashboard') }}" class="scheduler-product text-decoration-none"><span class="brand-emblem"><i class="bi bi-calendar2-check" aria-hidden="true"></i></span><span class="product-name">BPSC Exam Scheduler</span></a>
-        <div class="scheduler-commission">{{ __('Bangladesh Public Service Commission') }}</div>
+        <div class="scheduler-commission" lang="en"><strong>Bangladesh Public Service Commission</strong> (BPSC)</div>
     </div>
     <nav class="navbar navbar-expand-md scheduler-navigation" aria-label="{{ __('Toggle navigation') }}">
         <div class="container-xl">
