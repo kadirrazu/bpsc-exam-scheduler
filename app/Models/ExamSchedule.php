@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Services\Scheduler\Catalog;
+use App\Support\Ui;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
@@ -27,13 +29,13 @@ class ExamSchedule extends Model
 
     public function timeLabel(): string
     {
-        $start = $this->start_time ? \App\Support\Ui::date($this->start_time, 'h:i A') : '—';
+        $start = $this->start_time ? Ui::date($this->start_time, 'h:i A') : '—';
         if ($this->isViva()) {
             return $start;
         }
-        $end = $this->end_time ? \App\Support\Ui::date($this->end_time, 'h:i A') : '—';
+        $end = $this->end_time ? Ui::date($this->end_time, 'h:i A') : '—';
 
-        return !$this->start_time && !$this->end_time ? '—' : $start.' - '.$end;
+        return ! $this->start_time && ! $this->end_time ? '—' : $start.' - '.$end;
     }
 
     public function structureLabel(): string
@@ -43,25 +45,32 @@ class ExamSchedule extends Model
 
     public function structureLines(): array
     {
-        return array_map(fn ($row) => \App\Support\Ui::digits($row['candidates_per_board']).' × '.\App\Support\Ui::digits($row['boards']).' '.__('boards'), $this->board_structure ?? []);
+        return array_map(fn ($row) => Ui::digits($row['candidates_per_board']).' × '.Ui::digits($row['boards']).' '.__('boards'), $this->board_structure ?? []);
     }
 
     public function boardsLabel(): string
     {
-        if (! $this->isViva()) { return '—'; }
+        if (! $this->isViva()) {
+            return '—';
+        }
         $lines = $this->structureLines();
-        $total = \App\Support\Ui::number($this->board_count);
+        $total = Ui::number($this->board_count);
 
         return $lines ? implode("\n", $lines)."\n".__('Total Boards').': '.$total : $total;
     }
 
+    public function unitLabel(): string
+    {
+        return app(Catalog::class)->unitLabel($this->unit);
+    }
+
     public function isViva(): bool
     {
-        return (bool) config('scheduler.types.'.$this->exam_type.'.viva', false);
+        return app(Catalog::class)->isViva($this->exam_type);
     }
 
     public function typeLabel(): string
     {
-        return __(config('scheduler.types.'.$this->exam_type.'.label', $this->exam_type));
+        return app(Catalog::class)->typeLabel($this->exam_type);
     }
 }

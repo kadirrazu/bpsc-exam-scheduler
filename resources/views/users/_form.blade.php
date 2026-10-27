@@ -89,8 +89,8 @@
         <label for="unit" class="form-label required"><i class="bi bi-building" aria-hidden="true"></i> {{ __('Unit') }}</label>
         <select id="unit" name="unit" class="form-select @error('unit') is-invalid @enderror" required>
             <option value="">{{ __('Select unit') }}</option>
-            @foreach(config('scheduler.user_units') as $unit)
-                <option value="{{ $unit }}" @selected(old('unit', $user->unit ?? '') === $unit)>{{ $unit }}</option>
+            @foreach(app(\App\Services\Scheduler\Catalog::class)->units('users') as $unit)
+                <option value="{{ $unit }}" @selected(old('unit', $user->unit ?? '') === $unit)>{{ \App\Support\Ui::unit($unit) }}</option>
             @endforeach
         </select>
         @error('unit')<div class="invalid-feedback">{{ $message }}</div>@enderror

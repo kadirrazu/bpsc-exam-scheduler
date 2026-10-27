@@ -34,10 +34,10 @@ class SchedulerUnifiedTypesTest extends TestCase
         return $user;
     }
 
-    public function test_five_types_are_the_only_form_api_and_validation_options(): void
+    public function test_seeded_types_are_form_api_and_validation_options(): void
     {
         $user = $this->staff();
-        $labels = ['Preliminary (MCQ Type)', 'Written', 'Viva', 'Departmental', 'Senior Scale'];
+        $labels = ['Preliminary (MCQ Type)', 'Written', 'Viva', 'Departmental', 'Senior Scale', 'Aptitude Test', 'Practical Test', 'Typing Test'];
         $this->assertSame($labels, array_column(config('scheduler.types'), 'label'));
         $form = $this->get('/schedules/create')->assertOk()->assertDontSee('NC Written')->assertDontSee('BCS Viva');
         foreach ($labels as $label) {
@@ -52,7 +52,7 @@ class SchedulerUnifiedTypesTest extends TestCase
         $token = $user->createToken('Test')->plainTextToken;
         $this->app['auth']->forgetGuards();
         $this->withToken($token)->getJson('/api/v1/options')->assertOk()
-            ->assertJsonCount(5, 'exam_types')->assertJsonPath('exam_types.preliminary.label', $labels[0])
+            ->assertJsonCount(8, 'exam_types')->assertJsonPath('exam_types.preliminary.label', $labels[0])
             ->assertJsonPath('exam_types.viva.label', 'Viva')->assertJsonMissingPath('exam_types.bcs_viva');
     }
 

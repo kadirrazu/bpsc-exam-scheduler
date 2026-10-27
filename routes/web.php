@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AuditLogController;
+use App\Http\Controllers\CalendarController;
+use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\DesignationController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\PrintAuditController;
@@ -13,6 +15,7 @@ Route::get('/', fn () => redirect()->route(auth()->check() ? 'dashboard' : 'logi
 Route::post('/language', [LanguageController::class, 'update'])->middleware('throttle:30,1')->name('language.update');
 Route::middleware('auth')->group(function () {
     Route::post('/schedules/print-audit', [PrintAuditController::class, 'store'])->middleware('throttle:30,1')->name('schedules.print-audit');
+    Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar.index');
     Route::get('/dashboard', [ScheduleController::class, 'index'])->name('dashboard');
     Route::get('/schedules/export/{format}', [ScheduleController::class, 'export'])->middleware('throttle:scheduler-export')->name('schedules.export');
     Route::resource('schedules', ScheduleController::class);
@@ -24,6 +27,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/users/{user}/delete-confirm', [UserController::class, 'confirmDelete'])->name('users.confirm-delete');
         Route::resource('users', UserController::class);
         Route::resource('designations', DesignationController::class)->except('show');
+        Route::resource('exam-types', CatalogController::class)->parameters(['exam-types' => 'entry'])->except('show');
+        Route::resource('units', CatalogController::class)->parameters(['units' => 'entry'])->except('show');
         Route::get('/audit-logs', [AuditLogController::class, 'index'])->name('audit-logs.index');
     });
 });

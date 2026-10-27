@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Enums\UserRole;
+use App\Services\Scheduler\Catalog;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
@@ -39,7 +40,7 @@ class UpdateUserRequest extends FormRequest
                     ->where('is_active', true),
             ],
 
-            'unit' => ['required', 'string', Rule::in(config('scheduler.user_units'))],
+            'unit' => ['required', 'string', Rule::in(app(Catalog::class)->units('users'))],
 
             'role' => [
                 'required',

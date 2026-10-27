@@ -5,6 +5,8 @@ namespace App\Providers;
 use App\Enums\UserRole;
 use App\Models\Designation;
 use App\Models\ExamSchedule;
+use App\Models\ExamType;
+use App\Models\Unit;
 use App\Models\User;
 use App\Observers\SchedulerObserver;
 use App\Services\Scheduler\Audit;
@@ -26,7 +28,7 @@ class AppServiceProvider extends ServiceProvider
         Paginator::defaultView('shared.pagination');
         Gate::define('manage-system', fn (User $u) => $u->is_active && $u->role === UserRole::Admin);
         Gate::define('edit-schedules', fn (User $u) => $u->is_active && in_array($u->role, [UserRole::Admin, UserRole::Editor], true));
-        foreach ([User::class, Designation::class, ExamSchedule::class] as $model) {
+        foreach ([User::class, Designation::class, ExamSchedule::class, ExamType::class, Unit::class] as $model) {
             $model::observe(SchedulerObserver::class);
         }
         Event::listen(Login::class, function (Login $e) {

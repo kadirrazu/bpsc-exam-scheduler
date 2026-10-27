@@ -3,6 +3,8 @@
 namespace App\Services\Scheduler;
 
 use App\Models\ExamSchedule;
+use App\Models\ExamType;
+use App\Models\Unit;
 use App\Support\Ui;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Builder;
@@ -16,7 +18,7 @@ class ScheduleQuery
     {
         $d = $request->validate([
             'date' => 'nullable|date_format:Y-m-d', 'from' => 'nullable|date_format:Y-m-d', 'to' => 'nullable|date_format:Y-m-d|after_or_equal:from',
-            'exam_type' => ['nullable', Rule::in(array_keys(config('scheduler.types')))], 'unit' => ['nullable', Rule::in(config('scheduler.units'))],
+            'exam_type' => ['nullable', Rule::in(array_keys(app(Catalog::class)->types()))], 'unit' => ['nullable', Rule::in(app(Catalog::class)->units())],
             'status' => ['nullable', Rule::in(array_keys(config('scheduler.statuses')))], 'search' => 'nullable|string|max:200',
             'display' => ['nullable', Rule::in(['flat', 'grouped'])],
             'page' => 'nullable|integer|min:1', 'scope' => ['nullable', Rule::in(['all', 'week'])],
@@ -49,7 +51,10 @@ class ScheduleQuery
             ->when($f['status'] ?? null, fn ($q, $v) => $q->where('status', $v))
             ->when($f['search'] ?? null, function ($q, $v) {
                 $terms = array_unique([$v, Ui::ascii($v), Ui::bengaliDigits($v)]);
-                $q->where(function ($q) use ($terms) {
+                $matchingTypes = ExamType::where('name', 'like', '%'.$v.'%')->pluck('code');
+                $matchingUnits = Unit::where('name', 'like', '%'.$v.'%')->pluck('code');
+                $q->where(function ($q) use ($terms, $matchingTypes, $matchingUnits) {
+                    $q->whereIn('exam_type', $matchingTypes)->orWhereIn('unit', $matchingUnits);
                     foreach ($terms as $term) {
                         foreach (['title', 'post_name', 'ministry', 'reference', 'advertisement_number'] as $field) {
                             $q->orWhere($field, 'like', '%'.$term.'%');

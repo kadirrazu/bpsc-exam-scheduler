@@ -2,10 +2,16 @@
 
 namespace App\Support;
 
+use App\Services\Scheduler\Catalog;
 use Carbon\Carbon;
 
 class Ui
 {
+    public static function unit(?string $code): string
+    {
+        return app(Catalog::class)->unitLabel($code);
+    }
+
     public static function digits(mixed $value): string
     {
         return app()->getLocale() === 'bn' ? static::bengaliDigits($value) : (string) $value;

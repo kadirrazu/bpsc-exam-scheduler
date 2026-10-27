@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Designation;
 use App\Models\User;
 use App\Services\Scheduler\Audit;
+use App\Services\Scheduler\Catalog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -64,6 +65,6 @@ class AuthController extends Controller
 
     public function options()
     {
-        return response()->json(['exam_types' => array_map(fn ($t) => array_replace($t, ['label' => __($t['label'])]), config('scheduler.types')), 'units' => config('scheduler.units'), 'user_units' => config('scheduler.user_units'), 'unit_labels' => array_combine(config('scheduler.units'), config('scheduler.units')), 'statuses' => array_map(fn ($label) => __($label), config('scheduler.statuses')), 'roles' => UserRole::options(), 'designations' => Designation::where('is_active', true)->orderBy('sort_order')->orderBy('name')->get(['id', 'name'])]);
+        return response()->json(['exam_types' => app(Catalog::class)->types(), 'units' => app(Catalog::class)->units(), 'user_units' => app(Catalog::class)->units('users'), 'unit_labels' => app(Catalog::class)->unitLabels(), 'user_unit_labels' => app(Catalog::class)->unitLabels('users'), 'statuses' => array_map(fn ($label) => __($label), config('scheduler.statuses')), 'roles' => UserRole::options(), 'designations' => Designation::where('is_active', true)->orderBy('sort_order')->orderBy('name')->get(['id', 'name'])]);
     }
 }

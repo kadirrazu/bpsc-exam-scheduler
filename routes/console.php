@@ -3,6 +3,7 @@
 use App\Enums\UserRole;
 use App\Models\Designation;
 use App\Models\User;
+use App\Services\Scheduler\Catalog;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schedule;
@@ -14,7 +15,14 @@ Artisan::command('scheduler:create-admin', function () {
     $email = strtolower((string) $this->ask('Email address'));
     $password = $this->secret('Password (8+ characters, mixed case, number and symbol)');
     $confirm = $this->secret('Confirm password');
-    $unit = $this->choice('Unit', config('scheduler.user_units'), 'IT Section');
+    $unitLabels = app(Catalog::class)->unitLabels('users');
+    if (! $unitLabels) {
+        $this->error('Run php artisan db:seed --class=UnitSeeder first.');
+
+        return 1;
+    }
+    $selectedUnit = $this->choice('Unit', array_values($unitLabels), $unitLabels['IT Section'] ?? reset($unitLabels));
+    $unit = array_search($selectedUnit, $unitLabels, true);
     $validator = Validator::make(['name' => $name, 'email' => $email, 'password' => $password, 'password_confirmation' => $confirm], [
         'name' => 'required|string|max:255', 'email' => 'required|email|max:255|unique:users,email',
         'password' => ['required', 'confirmed', Password::min(8)->mixedCase()->numbers()->symbols()],
@@ -32,7 +40,10 @@ Artisan::command('scheduler:create-admin', function () {
 
         return 1;
     }
-    DB::transaction(fn () => User::create(['name' => $name, 'email' => $email, 'password' => $password, 'designation_id' => $designation->id, 'unit' => $unit, 'role' => UserRole::Admin, 'is_active' => true]));
+    DB::transaction(function () use ($name, $email, $password, $designation, $unit) {
+        app(Catalog::class)->lockUnit($unit, 'users');
+        User::create(['name' => $name, 'email' => $email, 'password' => $password, 'designation_id' => $designation->id, 'unit' => $unit, 'role' => UserRole::Admin, 'is_active' => true]);
+    });
     $this->info('Administrator created. No default password was saved.');
 
     return 0;

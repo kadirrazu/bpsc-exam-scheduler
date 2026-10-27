@@ -179,3 +179,49 @@ Raw API schedule records/filters/permissions are unchanged. XLSX supersedes earl
 ## v1.6.3 export styling
 
 XLSX column C is rich text: bold blue Unit, separator line, bold green exam type. Column positions and raw API payloads are unchanged.
+
+## v1.7.0 database catalogs and calendar
+
+`GET /options` is now sourced from the database. Seeded exam type codes in order: preliminary, written, viva, departmental, senior_scale, aptitude_test, practical_test, typing_test. Labels for the last three are Aptitude Test, Practical Test, Typing Test. Config arrays are seed defaults, not the live option lists.
+
+Existing canonical `exam_type` and `unit` strings remain unchanged in schedules/users. New entries receive immutable generated codes. Renaming changes display names everywhere, without rewriting historical records or their versions. Always use codes for requests and current labels from `/options` for display. `exam_types` retains `{code: {label, viva}}`; `units` and `user_units` remain code arrays. `unit_labels` maps exam unit codes to current names; new `user_unit_labels` does the same for staff units. Refresh options after catalog changes; do not hardcode choices or assume only code `viva` has a Viva workflow.
+
+Administrator-only catalog endpoints:
+
+| Method | Paths | Payload/result |
+| --- | --- | --- |
+| GET | /exam-types, /units | search/page; paginator |
+| POST | /exam-types | name, sort_order, is_viva; `{data}`, 201 |
+| POST | /units | name, sort_order, for_exams, for_users; `{data}`, 201 |
+| GET | /exam-types/{id}, /units/{id} | `{data}` |
+| PUT/PATCH | /exam-types/{id}, /units/{id} | full corresponding payload + latest version |
+| DELETE | /exam-types/{id}, /units/{id} | confirmation=DELETE, latest version; 204 |
+
+Names are unique Unicode strings, max 100; sort_order integer 0..65535. Boolean fields must be supplied explicitly. At least one Unit usage must be enabled. Code/id writes are prohibited; codes never change. Updates/deletes with stale version return 409. Deletion is rejected with 422 when schedules (including soft-deleted records) reference the type/unit, or users (including deleted users) reference the unit. Used unit scopes cannot be removed; an exam type's is_viva flag cannot change once used. Unused entries may be deleted. Name/order edits remain available for used entries.
+
+Schedule validation/derivation, form visibility and exports all use the selected type's Viva capability. A newly added Viva-capable type therefore uses boards/structure/Start only; other types use optional Centers and Start/End. Writers recheck catalog existence, scope and workflow under transaction locks before saving. User create/update and the administrator CLI command also validate/lock current staff units. Metadata CRUD audit actions are examtype.created/updated/deleted and unit.created/updated/deleted, with allowlisted fields and actor/IP/time from the existing audit system.
+
+`GET /api/v1/calendar` is available to all authenticated active roles. Query: optional month=YYYY-MM (default current Asia/Dhaka month; years 1900..9998), date=YYYY-MM-DD within that month, page and the usual exam_type/unit/status/search filters. Date/range/scope/display do not change the monthly boundaries; selected-day schedules always use the dashboard's chronological flat view. The web calendar is `/calendar`.
+
+Response example (schedule objects abbreviated):
+
+```json
+{
+  "month": "2026-10",
+  "filters": {},
+  "total": 3,
+  "days": {
+    "2026-10-27": {
+      "total": 3,
+      "types": [
+        {"code": "written", "label": "Written", "count": 2},
+        {"code": "typing_test", "label": "Typing Test", "count": 1}
+      ]
+    }
+  },
+  "selected_date": "2026-10-27",
+  "schedules": {"total": 3, "per_page": 25, "data": ["schedule objects"]}
+}
+```
+
+Days without matching exams are omitted from `days` (treat as zero); without selected_date, schedules is null. Monthly counts exclude soft-deleted schedules and respect filters, independently of day pagination. Invalid/out-of-month dates return 422. Calendar views are audited as report.viewed with report=exam_calendar; selected-day exports/print retain the existing report auditing. Native clients may fetch counts once per month instead of requesting each date separately.

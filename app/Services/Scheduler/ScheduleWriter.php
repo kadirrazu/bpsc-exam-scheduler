@@ -12,6 +12,7 @@ class ScheduleWriter
     public function create(array $data, User $actor): ExamSchedule
     {
         return DB::transaction(function () use ($data, $actor) {
+            app(Catalog::class)->lockSchedule($data);
             $s = new ExamSchedule($this->data($data));
             $s->created_by = $s->updated_by = $actor->id;
             $s->save();
@@ -25,6 +26,7 @@ class ScheduleWriter
         return DB::transaction(function () use ($schedule, $data, $actor) {
             $s = ExamSchedule::whereKey($schedule->id)->lockForUpdate()->firstOrFail();
             abort_unless($s->version === (int) $data['version'], 409, __('This schedule was changed by another user. Reload it before editing.'));
+            app(Catalog::class)->lockSchedule($data);
             $s->fill($this->data($data));
             $s->updated_by = $actor->id;
             $s->version++;
@@ -51,7 +53,7 @@ class ScheduleWriter
         // The web form has no title field. Retain legacy API titles; otherwise derive
         // the internal display summary from the schedule's actual fields.
         if (empty($d['title'])) {
-            $parts = [$d['post_name'], config('scheduler.types.'.$d['exam_type'].'.label', $d['exam_type']), $d['exam_date'], $d['unit']];
+            $parts = [$d['post_name'], app(Catalog::class)->typeLabel($d['exam_type']), $d['exam_date'], $d['unit']];
             foreach (['reference', 'advertisement_number', 'advertisement_year'] as $field) {
                 if (isset($d[$field]) && $d[$field] !== '') {
                     $parts[] = (string) $d[$field];
@@ -59,7 +61,7 @@ class ScheduleWriter
             }
             $d['title'] = Str::limit(implode(' · ', $parts), 200, '');
         }
-        $viva = (bool) config('scheduler.types.'.$d['exam_type'].'.viva');
+        $viva = app(Catalog::class)->isViva($d['exam_type']);
         $d[$viva ? 'center_count' : 'board_count'] = null;
         $d['vacant_posts'] = $d['vacant_posts'] ?? null;
         $d['board_structure'] = $viva ? ($d['board_structure'] ?? null) : null;

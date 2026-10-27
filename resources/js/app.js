@@ -1,5 +1,7 @@
 import '@tabler/core/dist/js/tabler.min.js';
 import {structureTotals} from './board-structure.js';
+import {initCalendarTooltips} from './calendar-tooltips.js';
+initCalendarTooltips();
 const type = document.querySelector('[data-exam-type]');
 if (type) {
     const structure = document.querySelector('[data-board-structure]');
@@ -10,7 +12,7 @@ if (type) {
         row.querySelector('[data-remove-structure]').hidden = false;
     });
     const calculate = () => {
-        if (type.value !== 'viva' || !rows) return;
+        if (type.selectedOptions[0]?.dataset.viva !== '1' || !rows) return;
         const totals = structureTotals([...rows.querySelectorAll('[data-structure-row]')].map(row => ({
             candidates_per_board: row.querySelector('[data-structure-candidates]').value,
             boards: row.querySelector('[data-structure-boards]').value,
@@ -20,7 +22,7 @@ if (type) {
         document.querySelector('#candidate_count').value = String(totals.candidates);
     };
     const toggle = () => {
-        const viva = type.value === 'viva';
+        const viva = type.selectedOptions[0]?.dataset.viva === '1';
         for (const kind of ['center','board']) {
             const field = document.querySelector(`[data-count="${kind}"]`);
             if (!field) continue;

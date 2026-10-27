@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Services\Scheduler\Catalog;
 use App\Support\Ui;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -21,19 +22,32 @@ class ScheduleRequest extends FormRequest
             $valid = true;
             $boards = $candidates = 0;
             foreach ($this->input('board_structure') as $row) {
-                if (!is_array($row)) { $rows[] = $row; $valid = false; continue; }
+                if (! is_array($row)) {
+                    $rows[] = $row;
+                    $valid = false;
+
+                    continue;
+                }
                 $a = Ui::ascii($row['candidates_per_board'] ?? null);
                 $b = Ui::ascii($row['boards'] ?? null);
-                if (($a === null || $a === '') && ($b === null || $b === '')) { continue; }
+                if (($a === null || $a === '') && ($b === null || $b === '')) {
+                    continue;
+                }
                 $rows[] = array_replace($row, ['candidates_per_board' => $a, 'boards' => $b]);
-                if (!is_scalar($a) || !is_scalar($b) || !ctype_digit((string) $a) || !ctype_digit((string) $b) || (int) $a < 1 || (int) $a > 10000000 || (int) $b < 1 || (int) $b > 100000) { $valid = false; continue; }
+                if (! is_scalar($a) || ! is_scalar($b) || ! ctype_digit((string) $a) || ! ctype_digit((string) $b) || (int) $a < 1 || (int) $a > 10000000 || (int) $b < 1 || (int) $b > 100000) {
+                    $valid = false;
+
+                    continue;
+                }
                 $boards += (int) $b;
                 $candidates += (int) $a * (int) $b;
             }
             $data['board_structure'] = $rows ?: null;
-            if ($this->input('exam_type') === 'viva' && $rows && $valid && count($rows) <= 50) {
+            if (app(Catalog::class)->isViva(is_string($this->input('exam_type')) ? $this->input('exam_type') : null) && $rows && $valid && count($rows) <= 50) {
                 foreach (['board_count' => $boards, 'candidate_count' => $candidates] as $field => $value) {
-                    if (!$this->filled($field)) { $data[$field] = $value; }
+                    if (! $this->filled($field)) {
+                        $data[$field] = $value;
+                    }
                 }
             }
         }
@@ -53,7 +67,9 @@ class ScheduleRequest extends FormRequest
     public function withValidator($validator): void
     {
         $validator->after(function ($validator) {
-            if ($validator->errors()->isNotEmpty()) { return; }
+            if ($validator->errors()->isNotEmpty()) {
+                return;
+            }
             $boards = $candidates = 0;
             foreach ($this->input('board_structure') ?? [] as $row) {
                 $boards += (int) $row['boards'];
@@ -67,7 +83,7 @@ class ScheduleRequest extends FormRequest
 
     public function rules(): array
     {
-        $viva = (bool) config('scheduler.types.'.$this->input('exam_type').'.viva', false);
+        $viva = app(Catalog::class)->isViva(is_string($this->input('exam_type')) ? $this->input('exam_type') : null);
 
         return [
             'vacant_posts' => 'nullable|integer|min:0|max:10000000',
@@ -78,8 +94,8 @@ class ScheduleRequest extends FormRequest
             'post_name' => 'required|string|max:200', 'post_grade' => 'nullable|integer|min:1|max:65535', 'ministry' => 'required|string|max:200',
             'title' => 'nullable|string|max:200', 'reference' => 'nullable|string|max:100',
             'advertisement_number' => 'nullable|string|max:100', 'advertisement_year' => 'nullable|integer|min:1900|max:9999',
-            'exam_type' => ['required', Rule::in(array_keys(config('scheduler.types')))],
-            'unit' => ['required', Rule::in(config('scheduler.units'))],
+            'exam_type' => ['required', Rule::in(array_keys(app(Catalog::class)->types()))],
+            'unit' => ['required', Rule::in(app(Catalog::class)->units())],
             'exam_date' => 'required|date_format:Y-m-d',
             'start_time' => 'nullable|date_format:H:i', 'end_time' => [$viva ? 'prohibited' : 'nullable', 'nullable', 'date_format:H:i', Rule::when($this->filled('start_time'), 'after:start_time')],
             'candidate_count' => 'nullable|integer|min:0|max:10000000',

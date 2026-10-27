@@ -3,6 +3,8 @@
 namespace App\Observers;
 
 use App\Models\Designation;
+use App\Models\ExamType;
+use App\Models\Unit;
 use App\Models\User;
 use App\Services\Scheduler\Audit;
 use Illuminate\Database\Eloquent\Model;
@@ -11,6 +13,10 @@ class SchedulerObserver
 {
     private function fields(Model $m): array
     {
+        if ($m instanceof ExamType || $m instanceof Unit) {
+            return ['code', 'name', 'sort_order', 'is_viva', 'for_exams', 'for_users', 'version'];
+        }
+
         return $m instanceof User ? ['name', 'email', 'designation_id', 'unit', 'role', 'is_active', 'preferred_locale', 'deleted_at'] :
             ($m instanceof Designation ? ['name', 'slug', 'sort_order', 'is_active'] : ['title', 'post_name', 'post_grade', 'vacant_posts', 'board_structure', 'ministry', 'reference', 'advertisement_number', 'advertisement_year', 'exam_type', 'unit', 'exam_date', 'start_time', 'end_time', 'candidate_count', 'center_count', 'board_count', 'status', 'notes', 'version', 'deleted_at']);
     }

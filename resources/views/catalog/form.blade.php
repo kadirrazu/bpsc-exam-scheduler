@@ -1,0 +1,10 @@
+@extends('layouts.app')
+@section('title',__($heading))
+@section('content')
+<div class="d-flex justify-content-between mb-3"><h1 class="page-title">{{ $entry->exists ? __('Edit') : __('Add') }} — {{ __($heading) }}</h1><a class="btn btn-outline-secondary" href="{{ route($base.'.index') }}"><i class="bi bi-arrow-left" aria-hidden="true"></i> {{ __('Back') }}</a></div>
+<form class="card card-body" method="post" action="{{ $entry->exists ? route($base.'.update',$entry) : route($base.'.store') }}">@csrf @if($entry->exists)@method('PUT')<input type="hidden" name="version" value="{{ old('version',$entry->version) }}">@endif
+<div class="row g-3"><div class="col-md-8"><label class="form-label required" for="name"><i class="bi bi-tag" aria-hidden="true"></i> {{ __('Name') }}</label><input class="form-control" id="name" name="name" maxlength="100" required value="{{ old('name',$entry->name) }}"></div><div class="col-md-4"><label class="form-label required" for="sort_order"><i class="bi bi-sort-numeric-down" aria-hidden="true"></i> {{ __('Sort Order') }}</label><input class="form-control" id="sort_order" name="sort_order" type="number" min="0" max="65535" required value="{{ old('sort_order',$entry->sort_order) }}"></div>
+<div class="col-12">@foreach($isType ? ['is_viva'=>'Viva workflow'] : ['for_exams'=>'Available for schedules','for_users'=>'Available for users'] as $field=>$label)<input type="hidden" name="{{ $field }}" value="0"><label class="form-check mb-2"><input class="form-check-input" type="checkbox" name="{{ $field }}" value="1" @checked(old($field,$entry->$field))><span class="form-check-label">{{ __($label) }}</span></label>@endforeach
+<p class="text-secondary small">{{ $isType ? __('Viva workflow enables boards and board structure, with Start Time only. This setting cannot change once used.') : __('Choose where this unit can be selected. Used scopes cannot be removed.') }}</p></div>
+<div class="col-12"><button class="btn btn-primary"><i class="bi bi-check2-circle" aria-hidden="true"></i> {{ __('Save') }}</button></div></div></form>
+@endsection

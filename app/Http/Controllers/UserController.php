@@ -6,7 +6,9 @@ use App\Enums\UserRole;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\Designation;
+use App\Models\Unit;
 use App\Models\User;
+use App\Services\Scheduler\Catalog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
@@ -17,9 +19,9 @@ class UserController extends Controller
 {
     public function index(Request $request)
     {
-        $data = $request->validate(['search' => 'nullable|string|max:255', 'role' => ['nullable', Rule::enum(UserRole::class)], 'status' => ['nullable', Rule::in(['active', 'inactive'])], 'unit' => ['nullable', Rule::in(config('scheduler.user_units'))]]);
+        $data = $request->validate(['search' => 'nullable|string|max:255', 'role' => ['nullable', Rule::enum(UserRole::class)], 'status' => ['nullable', Rule::in(['active', 'inactive'])], 'unit' => ['nullable', Rule::in(app(Catalog::class)->units('users'))]]);
         $search = trim($data['search'] ?? '');
-        $users = User::with('designation')->when($search !== '', fn ($q) => $q->where(fn ($q) => $q->where('name', 'like', '%'.$search.'%')->orWhere('email', 'like', '%'.$search.'%')->orWhere('unit', 'like', '%'.$search.'%')->orWhereHas('designation', fn ($q) => $q->where('name', 'like', '%'.$search.'%'))))->when($data['role'] ?? null, fn ($q, $role) => $q->where('role', $role))->when($data['status'] ?? null, fn ($q, $status) => $q->where('is_active', $status === 'active'))->when($data['unit'] ?? null, fn ($q, $unit) => $q->where('unit', $unit))->latest('id')->paginate(25)->withQueryString();
+        $users = User::with('designation')->when($search !== '', fn ($q) => $q->where(fn ($q) => $q->where('name', 'like', '%'.$search.'%')->orWhere('email', 'like', '%'.$search.'%')->orWhere('unit', 'like', '%'.$search.'%')->orWhereIn('unit', Unit::select('code')->where('name', 'like', '%'.$search.'%'))->orWhereHas('designation', fn ($q) => $q->where('name', 'like', '%'.$search.'%'))))->when($data['role'] ?? null, fn ($q, $role) => $q->where('role', $role))->when($data['status'] ?? null, fn ($q, $status) => $q->where('is_active', $status === 'active'))->when($data['unit'] ?? null, fn ($q, $unit) => $q->where('unit', $unit))->latest('id')->paginate(25)->withQueryString();
 
         return $request->is('api/*') ? response()->json($users) : view('users.index', compact('users', 'search'));
     }
@@ -31,7 +33,11 @@ class UserController extends Controller
 
     public function store(StoreUserRequest $request)
     {
-        $user = DB::transaction(fn () => User::create($request->safe()->except('password_confirmation')));
+        $user = DB::transaction(function () use ($request) {
+            app(Catalog::class)->lockUnit($request->input('unit'), 'users');
+
+            return User::create($request->safe()->except('password_confirmation'));
+        });
         if ($request->is('api/*')) {
             return response()->json(['data' => $user->load('designation')], 201);
         }
@@ -67,6 +73,7 @@ class UserController extends Controller
             if ($current->role === UserRole::Admin && $current->is_active && (! $data['is_active'] || $data['role'] !== 'admin') && $admins->count() <= 1) {
                 throw ValidationException::withMessages(['role' => __('At least one active Administrator must remain.')]);
             }
+            app(Catalog::class)->lockUnit($data['unit'], 'users');
             $current->forceFill($data)->save();
         });
         if ($request->is('api/*')) {

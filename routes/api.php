@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\AuditLogController;
+use App\Http\Controllers\CalendarController;
+use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\DesignationController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\StaffProfileController;
@@ -15,6 +17,7 @@ Route::prefix('v1')->name('api.')->group(function () {
         Route::get('/auth/me', [AuthController::class, 'me'])->name('auth.me');
         Route::post('/auth/logout', [AuthController::class, 'logout'])->name('auth.logout');
         Route::post('/auth/logout-all', [AuthController::class, 'logoutAll'])->name('auth.logout-all');
+        Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar.index');
         Route::get('/options', [AuthController::class, 'options'])->name('options');
         Route::get('/schedules/export/{format}', [ScheduleController::class, 'export'])->whereIn('format', ['xlsx', 'pdf'])->middleware('throttle:scheduler-export')->name('schedules.export');
         Route::apiResource('schedules', ScheduleController::class);
@@ -23,6 +26,8 @@ Route::prefix('v1')->name('api.')->group(function () {
         Route::middleware('can:manage-system')->group(function () {
             Route::apiResource('users', UserController::class);
             Route::apiResource('designations', DesignationController::class);
+            Route::apiResource('exam-types', CatalogController::class)->parameters(['exam-types' => 'entry']);
+            Route::apiResource('units', CatalogController::class)->parameters(['units' => 'entry']);
             Route::get('/audit-logs', [AuditLogController::class, 'index'])->name('audit-logs.index');
         });
     });
