@@ -380,5 +380,11 @@
     "Weekly holiday": "সাপ্তাহিক ছুটি",
     "Scroll sideways to view the full calendar.": "পুরো ক্যালেন্ডার দেখতে পাশে স্ক্রল করুন।",
     "No exam day": "পরীক্ষা নেই",
-    "examschedule.auto_completed": "Schedule automatically completed"
+    "Exam-wise rows": "পরীক্ষা অনুযায়ী সারি",
+    "Exam summary": "পরীক্ষার সারাংশ",
+    "Field": "বিষয়",
+    "Value": "বিবরণ",
+    "Post Name & Grade": "পদের নাম ও গ্রেড",
+    "Grade": "গ্রেড",
+    "Advertisement Number & Year": "বিজ্ঞপ্তি নম্বর ও সাল"
 }

@@ -41,7 +41,7 @@ class SchedulerPostGradeTest extends TestCase
         $this->post('/schedules', $this->data(['post_grade' => '৯']))->assertRedirect();
         $schedule = ExamSchedule::firstOrFail();
         $this->assertSame(9, $schedule->post_grade);
-        $this->get('/schedules/'.$schedule->id)->assertOk()->assertSee('পদের গ্রেড')->assertSee('৯');
+        $this->get('/schedules/'.$schedule->id)->assertOk()->assertSee('পদের নাম ও গ্রেড')->assertSee('(গ্রেড: ৯)');
         $log = AuditLog::where('action', 'examschedule.created')->where('subject_id', $schedule->id)->firstOrFail();
         $this->assertSame(9, (int) $log->details['after']['post_grade']);
         $token = $user->createToken('phone')->plainTextToken;

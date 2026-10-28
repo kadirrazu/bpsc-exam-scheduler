@@ -79,7 +79,7 @@ class SchedulerLocalizationTest extends TestCase
         $this->assertSame(2026, $s->advertisement_year);
         $this->assertSame(500, $s->candidate_count);
         $this->assertSame(5, $s->center_count);
-        $this->get('/schedules/'.$s->id)->assertOk()->assertSee('বিজ্ঞপ্তির সাল')->assertSee('২০২৬')->assertSee($s->title);
+        $this->get('/schedules/'.$s->id)->assertOk()->assertSee('বিজ্ঞপ্তি নম্বর ও সাল')->assertSee('২০২৬')->assertSee($s->title);
         $this->get('/schedules?search='.urlencode('বিজ্ঞপ্তি-০০১'))->assertOk()->assertSee($s->title);
         $log = AuditLog::where('action', 'examschedule.created')->where('subject_id', $s->id)->firstOrFail();
         $this->assertSame(2026, (int) $log->details['after']['advertisement_year']);

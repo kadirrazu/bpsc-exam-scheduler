@@ -14,7 +14,7 @@
 </div></form>
 <div class="d-flex flex-wrap justify-content-between gap-2 mb-3"><span class="text-secondary small">{{ __('Statistics reflect all matching exams, not just this page.') }}</span><div class="d-flex flex-wrap gap-2 d-print-none">@foreach(['xlsx'=>'Export XLSX','pdf'=>'Export PDF','print'=>'Print'] as $format=>$label)<a class="btn btn-outline-primary btn-sm" @if($format==='print')target="_blank" rel="noopener"@endif href="{{ route('schedules.export',array_merge($filters,['format'=>$format,'page'=>null])) }}"><i class="bi bi-{{ ['xlsx'=>'file-earmark-excel','pdf'=>'file-earmark-pdf','print'=>'printer'][$format] }}" aria-hidden="true"></i> {{ __($label) }}</a>@endforeach</div></div>
 <div class="d-flex flex-wrap gap-2 mb-3" role="group" aria-label="{{ __('Schedule display') }}">
-@foreach(['flat'=>'Exam rows','grouped'=>'Date-wise rows'] as $mode=>$label)<a class="btn btn-sm {{ $filters['display']===$mode ? 'btn-primary':'btn-outline-primary' }}" @if($filters['display']===$mode)aria-current="true"@endif href="{{ route($isDashboard ? 'dashboard':'schedules.index',array_merge($filters,['display'=>$mode,'page'=>null])) }}">{{ __($label) }}</a>@endforeach
+@foreach(['flat'=>'Exam-wise rows','grouped'=>'Date-wise rows'] as $mode=>$label)<a class="btn btn-sm {{ $filters['display']===$mode ? 'btn-primary':'btn-outline-primary' }}" @if($filters['display']===$mode)aria-current="true"@endif href="{{ route($isDashboard ? 'dashboard':'schedules.index',array_merge($filters,['display'=>$mode,'page'=>null])) }}">{{ __($label) }}</a>@endforeach
 </div>
 @include('schedules.table')
 @endsection

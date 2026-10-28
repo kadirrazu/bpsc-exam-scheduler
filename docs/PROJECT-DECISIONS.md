@@ -1,6 +1,6 @@
 # Current project decisions
 
-This is the current requirements record. Earlier decisions are archived in history/PROJECT-DECISIONS-through-v1.3.0.md; superseded rules there are historical. Latest supplied reference: project-reference-27-10-2026-11-54-PM.zip (v1.7.5). Current update: v1.8.0.
+This is the current requirements record. Earlier decisions are archived in history/PROJECT-DECISIONS-through-v1.3.0.md; superseded rules there are historical. Latest supplied reference: project-reference-27-10-2026-11-54-PM.zip (v1.7.5). Current update: v1.7.7.
 
 ## Access and identity
 
@@ -88,10 +88,10 @@ The #day-schedules fragment target retains tabindex=-1 for focus/navigation. Its
 The full authenticated header name Bangladesh Public Service Commission (BPSC) is inside one strong element. Calendar's title/icon use flex alignment with gap-2; filter buttons share a wrapping flex container with gap-2 for both horizontal and vertical spacing. Existing compiled utility styles are reused.
 
 
-## Date-based automatic completion (v1.8.0)
+## Schedule detail view (v1.7.7)
 
-Every day at 20:00 Asia/Dhaka, the Laravel scheduler checks non-deleted Scheduled exams with exam_date strictly before today's date in Asia/Dhaka and marks them Completed. It does not infer completion from today's End Time, or change Proposed/Postponed/Cancelled/Completed records. All exam types are covered. The cutoff date is frozen for each run; older backlog is processed after downtime.
+English display switching reads Exam-wise rows / Date-wise rows; Bengali wording remains unchanged. The details page retains its compact summary (Unit, Post Name with Ministry/Organization, Exam Type and Exam Date). Beneath it, three side-by-side cells show Exam Type, Unit and Post Code; mobile stacks those cells. The main two-column table has row labels only, with no Field/Value header row, and all values are bold.
 
-Each row is rechecked under a transaction/row lock; status, version and system update attribution are committed together with an explicit examschedule.auto_completed audit. System identity has no human actor ID or browser IP. Audit failure rolls back the row transition. Versions increment so stale manual forms fail safely. Duplicate runs do not re-complete or duplicate audits. No new web/API mutation endpoint is added.
+Post Name & Grade combines the name with (Grade: X); a missing grade omits the complete parenthesized suffix. Advertisement Number & Year combines number and year; a number alone or year alone remains readable without empty parentheses, and both absent display a dash. Time uses the exact schedule timeLabel formatter shared with dashboard tables, including Start only for Viva and English AM/PM in both languages. Vacant Posts immediately precedes Candidates. Notes/Remarks and Last Updated remain the final rows. Viva keeps Board Structure and Boards; non-Viva keeps Centers.
 
-The scheduler uses a 30-minute overlap mutex. Automatic runs default on, controlled by SCHEDULER_AUTO_COMPLETE_PAST_EXAMS; the manual command supports --dry-run. A host-level daily 20:00 Dhaka timer can call the command with --scheduled directly. Alternatively, an existing master schedule:run timer or local schedule:work loop uses the registered daily event; its minute checks do not execute completion repeatedly. The repository cannot itself enable the user's PC/server timer. Full operational steps are in AUTOMATIC-COMPLETION.md; no queue worker or schema migration is needed. Viewer access remains read-only as confirmed by the user, including the Schedules listing.
+Post Code is purple, Post Name blue, Ministry/Organization green and the grade suffix amber. Zero stays distinct from missing values. Bengali numeric/date conversion remains display-only; Unit/type names use current catalog labels without automatic translation. User text remains escaped and notes preserve line breaks. Viewer read access, role-gated controls, optimistic versions, API records and audit behavior are unchanged.
