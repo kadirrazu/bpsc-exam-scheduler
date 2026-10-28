@@ -14,7 +14,7 @@ No security guarantee can make all hacking impossible. This version is ready for
 - Production runtime DB account should have the minimum permissions required; use separate migration credentials where available. Restrict audit_logs UPDATE/DELETE permissions for runtime credentials at the database level. The ORM's immutability does not stop a privileged DBA or raw SQL.
 - Use shared Redis/database cache and sessions for multiple web instances; throttling must be shared. Limit PHP request sizes and enable reverse-proxy request/time/rate limits. Keep production PDF/cache directories outside public with limited write access.
 - Set up encrypted backups, tested restore, logs/monitoring, alerting for repeated auth failures and unexpected 5xx, disk-space monitoring for audit growth. Audit retention is an administrative policy; no silent pruning is configured.
-- Run scheduled token pruning (`schedule:run` each minute). No queue worker needed for v1.
+- Run the Laravel scheduler (`schedule:run` each minute) for token pruning and past-exam automatic completion. See AUTOMATIC-COMPLETION.md for Windows Task Scheduler/Linux cron setup, preview commands and the enable/disable option. No queue worker is needed for these tasks.
 - CORS is unnecessary for a native Android app; do not add permissive browser origins/credentialed wildcard CORS.
 - Keep PHP/Laravel/OS dependencies updated through reviewed changes. Run composer audit and npm audit regularly; this package's lock verification is a point-in-time check, not a permanent clean bill of health.
 

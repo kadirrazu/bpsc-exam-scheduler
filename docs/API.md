@@ -225,3 +225,8 @@ Response example (schedule objects abbreviated):
 ```
 
 Days without matching exams are omitted from `days` (treat as zero); without selected_date, schedules is null. Monthly counts exclude soft-deleted schedules and respect filters, independently of day pagination. Invalid/out-of-month dates return 422. Calendar views are audited as report.viewed with report=exam_calendar; selected-day exports/print retain the existing report auditing. Native clients may fetch counts once per month instead of requesting each date separately.
+
+
+## v1.8.0 automatic date-based completion
+
+The server scheduler may change a non-deleted past-date Scheduled exam to Completed once daily at 20:00 Asia/Dhaka, using today's date in Asia/Dhaka. It increments version and writes examschedule.auto_completed with System identity, console channel, null actor ID/IP and before/after values. There is no new HTTP endpoint. Existing raw schedule/summary fields and permissions are unchanged. Native clients must refresh records before editing and handle existing 409 conflicts when automation has advanced the version. Today's exams and other statuses are unaffected.

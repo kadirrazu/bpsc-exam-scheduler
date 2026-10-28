@@ -15,6 +15,8 @@ class ExamSchedule extends Model
 
     protected $attributes = ['vacant_posts' => null, 'board_structure' => null, 'post_grade' => null, 'center_count' => null, 'board_count' => null, 'candidate_count' => null, 'ministry' => null, 'reference' => null, 'notes' => null];
 
+    protected $hidden = ['created_by', 'updated_by'];
+
     protected $fillable = ['title', 'post_name', 'post_grade', 'vacant_posts', 'board_structure', 'ministry', 'reference', 'advertisement_number', 'advertisement_year', 'exam_type', 'unit', 'exam_date', 'start_time', 'end_time', 'candidate_count', 'center_count', 'board_count', 'status', 'notes'];
 
     protected function casts(): array

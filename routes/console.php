@@ -49,3 +49,9 @@ Artisan::command('scheduler:create-admin', function () {
     return 0;
 })->purpose('Create an administrator using interactive credentials');
 Schedule::command('sanctum:prune-expired --hours=24')->daily();
+
+Schedule::command('scheduler:complete-past-exams --scheduled')
+    ->dailyAt('20:00')
+    ->timezone('Asia/Dhaka')
+    ->withoutOverlapping(30)
+    ->when(fn () => (bool) config('scheduler.auto_complete_past_exams'));

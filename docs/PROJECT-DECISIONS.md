@@ -1,6 +1,6 @@
 # Current project decisions
 
-This is the current requirements record. Earlier decisions are archived in history/PROJECT-DECISIONS-through-v1.3.0.md; superseded rules there are historical. Latest supplied reference: project-reference-09-10-2026-11-38-PM.zip (v1.6.3). Current update: v1.7.0.
+This is the current requirements record. Earlier decisions are archived in history/PROJECT-DECISIONS-through-v1.3.0.md; superseded rules there are historical. Latest supplied reference: project-reference-27-10-2026-11-54-PM.zip (v1.7.5). Current update: v1.8.0.
 
 ## Access and identity
 
@@ -86,3 +86,12 @@ The #day-schedules fragment target retains tabindex=-1 for focus/navigation. Its
 ## Header and calendar spacing (v1.7.5)
 
 The full authenticated header name Bangladesh Public Service Commission (BPSC) is inside one strong element. Calendar's title/icon use flex alignment with gap-2; filter buttons share a wrapping flex container with gap-2 for both horizontal and vertical spacing. Existing compiled utility styles are reused.
+
+
+## Date-based automatic completion (v1.8.0)
+
+Every day at 20:00 Asia/Dhaka, the Laravel scheduler checks non-deleted Scheduled exams with exam_date strictly before today's date in Asia/Dhaka and marks them Completed. It does not infer completion from today's End Time, or change Proposed/Postponed/Cancelled/Completed records. All exam types are covered. The cutoff date is frozen for each run; older backlog is processed after downtime.
+
+Each row is rechecked under a transaction/row lock; status, version and system update attribution are committed together with an explicit examschedule.auto_completed audit. System identity has no human actor ID or browser IP. Audit failure rolls back the row transition. Versions increment so stale manual forms fail safely. Duplicate runs do not re-complete or duplicate audits. No new web/API mutation endpoint is added.
+
+The scheduler uses a 30-minute overlap mutex. Automatic runs default on, controlled by SCHEDULER_AUTO_COMPLETE_PAST_EXAMS; the manual command supports --dry-run. A host-level daily 20:00 Dhaka timer can call the command with --scheduled directly. Alternatively, an existing master schedule:run timer or local schedule:work loop uses the registered daily event; its minute checks do not execute completion repeatedly. The repository cannot itself enable the user's PC/server timer. Full operational steps are in AUTOMATIC-COMPLETION.md; no queue worker or schema migration is needed. Viewer access remains read-only as confirmed by the user, including the Schedules listing.

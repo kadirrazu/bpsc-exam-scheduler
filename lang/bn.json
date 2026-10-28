@@ -379,5 +379,6 @@
     "Exam day": "পরীক্ষা আছে",
     "Weekly holiday": "সাপ্তাহিক ছুটি",
     "Scroll sideways to view the full calendar.": "পুরো ক্যালেন্ডার দেখতে পাশে স্ক্রল করুন।",
-    "No exam day": "পরীক্ষা নেই"
+    "No exam day": "পরীক্ষা নেই",
+    "examschedule.auto_completed": "Schedule automatically completed"
 }

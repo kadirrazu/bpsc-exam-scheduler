@@ -8,6 +8,7 @@ use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\PrintAuditController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\StaffProfileController;
+use App\Http\Controllers\StatisticsController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -15,6 +16,7 @@ Route::get('/', fn () => redirect()->route(auth()->check() ? 'dashboard' : 'logi
 Route::post('/language', [LanguageController::class, 'update'])->middleware('throttle:30,1')->name('language.update');
 Route::middleware('auth')->group(function () {
     Route::post('/schedules/print-audit', [PrintAuditController::class, 'store'])->middleware('throttle:30,1')->name('schedules.print-audit');
+    Route::get('/statistics', [StatisticsController::class, 'index'])->name('statistics.index');
     Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar.index');
     Route::get('/dashboard', [ScheduleController::class, 'index'])->name('dashboard');
     Route::get('/schedules/export/{format}', [ScheduleController::class, 'export'])->middleware('throttle:scheduler-export')->name('schedules.export');

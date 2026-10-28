@@ -6,9 +6,11 @@ use App\Http\Requests\ScheduleRequest;
 use App\Models\ExamSchedule;
 use App\Services\Scheduler\Audit;
 use App\Services\Scheduler\ScheduleExport;
+use App\Services\Scheduler\ScheduleHistory;
 use App\Services\Scheduler\ScheduleQuery;
 use App\Services\Scheduler\ScheduleWriter;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Gate;
 
 class ScheduleController extends Controller
@@ -25,7 +27,7 @@ class ScheduleController extends Controller
             $totalDates = (clone $query)->reorder()->distinct()->count('exam_date');
             $dateItems = (clone $query)->reorder()->select('exam_date')->distinct()
                 ->orderBy('exam_date', $direction)->forPage($datePage, 25)->get();
-            $pagination = (new \Illuminate\Pagination\LengthAwarePaginator($dateItems, $totalDates, 25, $datePage, ['path' => $r->url()]))->withQueryString();
+            $pagination = (new LengthAwarePaginator($dateItems, $totalDates, 25, $datePage, ['path' => $r->url()]))->withQueryString();
             $dates = $pagination->getCollection()->pluck('exam_date')->map(fn ($date) => $date->format('Y-m-d'));
             $schedules = (clone $query)->whereIn('exam_date', $dates)->get();
             $rowOffset = $dates->isEmpty() ? 0 : (clone $query)->where('exam_date', $direction === 'desc' ? '>' : '<', $dates->first())->count();
@@ -59,7 +61,12 @@ class ScheduleController extends Controller
 
     public function show(Request $r, ExamSchedule $schedule)
     {
-        $response = $r->is('api/*') ? response()->json(['data' => $schedule]) : response()->view('schedules.show', compact('schedule'));
+        $history = null;
+        if (! $r->is('api/*') && Gate::allows('edit-schedules')) {
+            $r->validate(['history_page' => 'nullable|integer|min:1|max:1000000']);
+            $history = app(ScheduleHistory::class)->forSchedule($schedule);
+        }
+        $response = $r->is('api/*') ? response()->json(['data' => $schedule]) : response()->view('schedules.show', compact('schedule', 'history'));
         app(Audit::class)->record('report.viewed', ['report' => 'exam_schedule_details', 'format' => $r->is('api/*') ? 'json' : 'web', 'locale' => app()->getLocale()], $schedule);
 
         return $response;

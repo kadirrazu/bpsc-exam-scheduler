@@ -96,3 +96,20 @@ window.addEventListener('pagehide', () => passwordControls.forEach(hide => hide(
 document.addEventListener('visibilitychange', () => {
     if(document.hidden) passwordControls.forEach(hide => hide());
 });
+
+const statisticsPeriod = document.querySelector('[data-statistics-period]');
+if (statisticsPeriod) {
+    const toggleStatisticsFields = () => {
+        for (const [selector, visible] of [
+            ['[data-statistics-year-wrap]', statisticsPeriod.value !== 'range'],
+            ['[data-statistics-month-wrap]', statisticsPeriod.value === 'month'],
+            ['[data-statistics-range-wrap]', statisticsPeriod.value === 'range'],
+        ]) document.querySelectorAll(selector).forEach(group => {
+            group.hidden = !visible;
+            group.querySelectorAll('input,select').forEach(field => field.disabled = !visible);
+            if (selector === '[data-statistics-range-wrap]') group.querySelectorAll('input').forEach(field => field.required = visible);
+        });
+    };
+    statisticsPeriod.addEventListener('change', toggleStatisticsFields);
+    toggleStatisticsFields();
+}

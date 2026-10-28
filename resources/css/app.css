@@ -119,3 +119,19 @@ html[lang="bn"] .scheduler-brand {font-size:1.1rem;line-height:1.35;}
 @media(prefers-reduced-motion:reduce){.bpsc-calendar-day,.bpsc-calendar-stats{transition:none;transform:none}}
 
 .bpsc-calendar-outside.bpsc-calendar-weekend{background:#f5efef}.bpsc-calendar-outside.bpsc-calendar-weekend .bpsc-calendar-number{color:#bf9298}
+
+/* Keep the two brand rows and all four footer lines centered on mobile. */
+@media(max-width:767px){
+ .scheduler-header .scheduler-masthead{justify-content:center;text-align:center}
+ .scheduler-masthead .scheduler-product{width:100%;justify-content:center;text-align:center}
+ .scheduler-masthead .scheduler-commission{width:100%;text-align:center;padding-left:0}
+ .scheduler-footer .backend-footer-main,.scheduler-footer .backend-footer-details{align-items:center;text-align:center}
+ .scheduler-footer .backend-footer-main>*,.scheduler-footer .backend-footer-details>*{width:100%;text-align:center}
+}
+/* Preserve fragment focus without the default dark outline around the day table. */
+#day-schedules:focus{outline:none}
+.statistics-card{height:100%;border-radius:12px;border:1px solid #dce6ec;box-shadow:0 4px 14px #24465c05}
+.statistics-card .statistic-value{font-size:2rem;font-weight:800;line-height:1.2;color:#245d55;font-variant-numeric:tabular-nums}
+.schedule-history th{font-weight:700}.schedule-history :is(th,td){vertical-align:middle}
+
+.statistics-table th,.statistics-table tfoot{font-weight:700}.statistics-table :is(th,td){text-align:center;vertical-align:middle}.statistics-table thead th:nth-child(2),.statistics-table tbody td:nth-child(2){text-align:left;min-width:170px}

@@ -1,7 +1,8 @@
 <?php
 
 return [
-    'version' => '1.7.5',
+    'version' => '1.8.0',
+    'auto_complete_past_exams' => env('SCHEDULER_AUTO_COMPLETE_PAST_EXAMS', true),
     'api_token_hours' => 24,
     'max_export_rows' => 10000,
     'status_colors' => ['proposed' => 'FFF4CC', 'scheduled' => 'E6F0FF', 'completed' => 'E0F2E5', 'postponed' => 'FCE8D5', 'cancelled' => 'FCE3E3'],

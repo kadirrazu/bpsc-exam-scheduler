@@ -7,6 +7,7 @@ use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\DesignationController;
 use App\Http\Controllers\ScheduleController;
 use App\Http\Controllers\StaffProfileController;
+use App\Http\Controllers\StatisticsController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\ActiveApiAccount;
 use Illuminate\Support\Facades\Route;
@@ -17,6 +18,7 @@ Route::prefix('v1')->name('api.')->group(function () {
         Route::get('/auth/me', [AuthController::class, 'me'])->name('auth.me');
         Route::post('/auth/logout', [AuthController::class, 'logout'])->name('auth.logout');
         Route::post('/auth/logout-all', [AuthController::class, 'logoutAll'])->name('auth.logout-all');
+        Route::get('/statistics', [StatisticsController::class, 'index'])->name('statistics.index');
         Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar.index');
         Route::get('/options', [AuthController::class, 'options'])->name('options');
         Route::get('/schedules/export/{format}', [ScheduleController::class, 'export'])->whereIn('format', ['xlsx', 'pdf'])->middleware('throttle:scheduler-export')->name('schedules.export');

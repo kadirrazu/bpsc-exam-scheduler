@@ -30,6 +30,7 @@
             <div class="collapse navbar-collapse" id="navbar-menu"><ul class="navbar-nav gap-md-2">
                 <li class="nav-item {{ request()->routeIs('dashboard') ? 'active':'' }}"><a class="nav-link" href="{{ route('dashboard') }}" @if(request()->routeIs('dashboard')) aria-current="page" @endif><i class="bi bi-grid-1x2" aria-hidden="true"></i>{{ __('Dashboard') }}</a></li>
                 <li class="nav-item {{ request()->routeIs('calendar.*') ? 'active':'' }}"><a class="nav-link" href="{{ route('calendar.index') }}" @if(request()->routeIs('calendar.*')) aria-current="page" @endif><i class="bi bi-calendar-month" aria-hidden="true"></i>{{ __('Calendar') }}</a></li>
+                <li class="nav-item {{ request()->routeIs('statistics.*') ? 'active':'' }}"><a class="nav-link" href="{{ route('statistics.index') }}" @if(request()->routeIs('statistics.*'))aria-current="page"@endif><i class="bi bi-bar-chart-line" aria-hidden="true"></i>{{ __('Statistics') }}</a></li>
                 <li class="nav-item dropdown {{ request()->routeIs('schedules.*','exam-types.*','units.*') ? 'active':'' }}">
                     <button class="nav-link dropdown-toggle border-0 bg-transparent" type="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-calendar2-week" aria-hidden="true"></i>{{ __('Exam Management') }}</button>
                     <div class="dropdown-menu">
